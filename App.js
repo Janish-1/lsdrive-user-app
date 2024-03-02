@@ -5,7 +5,10 @@ import HomePage from './components/HomePage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginPage from './components/LoginPage';
-import Register from './components/RegisterPage';
+import RegisterPage from './components/RegisterPage';
+import Dashboard from './components/Dashboard';
+import OTP from './components/OTP';
+import Reset from './components/ResetPassword';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +18,10 @@ export default function App() {
         <Stack.Navigator initialRouteName="HomePage" screenOptions={{ headerShown: false, }}>
           <Stack.Screen name="HomePage" component={HomePage} />
           <Stack.Screen name="LoginPage" component={LoginPage} />
-          <Stack.Screen name="RegisterPage" component={Register} />
+          <Stack.Screen name="RegisterPage" component={RegisterPage} />
+          <Stack.Screen name="Dashboard" component={Dashboard} />
+          <Stack.Screen name="OTP" component={OTP} />
+          <Stack.Screen name="ResetPassword" component={Reset} />
         </Stack.Navigator>
       </NavigationContainer>
   );
