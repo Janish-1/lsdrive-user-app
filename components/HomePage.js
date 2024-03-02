@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import LoginPage from './LoginPage';
 
 const HomePage = () => {
   const navigation = useNavigation(); // Add this line to get the navigation object

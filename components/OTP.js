@@ -1,9 +1,9 @@
-// LoginPage.js
+// OTP.js
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const LoginPage = () => {
+const OTP = () => {
   const navigation = useNavigation();
 
   const handleGoBack = () => {
@@ -12,7 +12,7 @@ const LoginPage = () => {
 
   return (
     <View>
-      <Text>Login Page Content</Text>
+      <Text>OTP Page Content</Text>
       <TouchableOpacity onPress={handleGoBack}>
         <Text>Go Back</Text>
       </TouchableOpacity>
@@ -20,4 +20,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default OTP;

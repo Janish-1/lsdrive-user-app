@@ -3,15 +3,21 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import HomePage from './components/HomePage';
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginPage from './components/LoginPage';
+import Register from './components/RegisterPage';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
       <NavigationContainer>
-        <HomePage />
+        <Stack.Navigator initialRouteName="HomePage" screenOptions={{ headerShown: false, }}>
+          <Stack.Screen name="HomePage" component={HomePage} />
+          <Stack.Screen name="LoginPage" component={LoginPage} />
+          <Stack.Screen name="RegisterPage" component={Register} />
+        </Stack.Navigator>
       </NavigationContainer>
-      <StatusBar style="white" />
-    </View>
   );
 }
 
