@@ -1,13 +1,47 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const LoginPage = () => {
   const navigation = useNavigation();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  const LoginbuttonClick = () => {
-    console.log('Login pressed Again');
-    navigation.navigate('SelectCarPage');
+  const loginSuccess = () => {
+    // Log the body data before making the API call
+    const requestBody = {
+      username: username,
+      password: password,
+    };
+    console.log('Request body:', requestBody);
+    console.log(JSON.stringify(requestBody))
+
+    // Call your API endpoint here to register the user
+    fetch(`http://lsdrivebackend.ramo.co.in/api/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Handle success response
+      console.log('Login successful:', data);
+      alert('Your Login is successful!');
+      navigation.navigate('Dashboard');
+    })
+    .catch(error => {
+      // Handle error
+      console.error('Login failed:', error);
+      alert('Login failed. Please try again later.');
+    });
   };
 
   return (
@@ -17,17 +51,17 @@ const LoginPage = () => {
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Username:</Text>
-          <TextInput style={styles.input} placeholder="Enter your username" />
+          <TextInput style={styles.input} placeholder="Enter your username" onChangeText={(text) => setUsername(text)} />
         </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Password:</Text>
-          <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry />
+          <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry onChangeText={(text) => setPassword(text)} />
         </View>
 
         <Text style={styles.link}>Forgot your password?</Text>
 
-        <TouchableOpacity style={styles.buttonContainer} onPress={LoginbuttonClick}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={loginSuccess}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
