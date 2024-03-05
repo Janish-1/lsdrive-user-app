@@ -9,6 +9,8 @@ import RegisterPage from './components/RegisterPage';
 import Dashboard from './components/Dashboard';
 import OTP from './components/OTP';
 import Reset from './components/ResetPassword';
+import SelectCarPage from './components/SelectCarPage';
+import CheckoutPage from './components/CheckoutPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +24,8 @@ export default function App() {
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="OTP" component={OTP} />
           <Stack.Screen name="ResetPassword" component={Reset} />
+          <Stack.Screen name="SelectCarPage" component={SelectCarPage} />
+          <Stack.Screen name="CheckoutPage" component={CheckoutPage} />
         </Stack.Navigator>
       </NavigationContainer>
   );

@@ -8,7 +8,7 @@ const LoginPage = () => {
 
   const LoginbuttonClick = () => {
     console.log('Login pressed Again');
-    navigation.navigate('Dashboard');
+    navigation.navigate('SelectCarPage');
   };
 
   return (
