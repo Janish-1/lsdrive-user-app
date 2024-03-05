@@ -1,4 +1,4 @@
-rootProject.name = 'lsdriveuserapp'
+rootProject.name = 'lsdrive-user-app'
 
 dependencyResolutionManagement {
   versionCatalogs {

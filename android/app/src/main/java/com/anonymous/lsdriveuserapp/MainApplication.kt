@@ -1,4 +1,4 @@
-package com.lsdriveuserapp
+package com.anonymous.lsdriveuserapp
 
 import android.app.Application
 import android.content.res.Configuration

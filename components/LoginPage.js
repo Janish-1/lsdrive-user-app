@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buttonContainer: {
-    backgroundColor: 'blue',
+    backgroundColor: '#9b59b6',
     borderRadius: 8,
     padding: 12,
     alignItems: 'center',

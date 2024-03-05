@@ -5,6 +5,17 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "com.anonymous.lsdriveuserapp"
+    },
+    "ios": {
+      "bundleIdentifier": "com.anonymous.lsdriveuserapp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "943aa6a3-5958-4689-a62a-9220d13a3793"
+      }
+    }
   }
 }

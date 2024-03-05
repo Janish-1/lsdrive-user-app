@@ -1,4 +1,4 @@
-package com.lsdriveuserapp
+package com.anonymous.lsdriveuserapp
 
 import android.os.Build
 import android.os.Bundle
