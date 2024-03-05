@@ -1,6 +1,5 @@
-// LoginScreen.js
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginPage = () => {
@@ -12,44 +11,43 @@ const LoginPage = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+      <View style={styles.inner}>
+        <Text style={styles.title}>Welcome Back!</Text>
 
-      <Text style={styles.title}>Welcome Back!</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Username:</Text>
+          <TextInput style={styles.input} placeholder="Enter your username" />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Username:</Text>
-        <TextInput style={styles.input} placeholder="Enter your username" />
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password:</Text>
+          <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry />
+        </View>
+
+        <Text style={styles.link}>Forgot your password?</Text>
+
+        <TouchableOpacity style={styles.buttonContainer} onPress={LoginbuttonClick}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        <View style={styles.signupContainer}>
+          <Text>Don't have an account? <Text style={styles.signupLink}>Signup!</Text></Text>
+        </View>
       </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Password:</Text>
-        <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry />
-      </View>
-
-      <Text style={styles.link}>Forgot your password?</Text>
-
-      <TouchableOpacity style={styles.buttonContainer} onPress={LoginbuttonClick}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <View style={styles.signupContainer}>
-        <Text>Don't have an account? <Text style={styles.signupLink}>Signup!</Text></Text>
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+  },
+  inner: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 16,
+    padding: 16,
   },
   title: {
     fontSize: 24,

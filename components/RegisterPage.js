@@ -1,22 +1,54 @@
-// RegisterPage.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import env from "react-dotenv";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [fullname, setFullname] = useState('');
-  const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
-  const [gender, setGender] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [vehicleType, setVehicleType] = useState('');
 
   const registrationSuccess = () => {
-    alert('Your registration is successful!');
-    // You can add navigation logic here to navigate to another screen
-  };
+    // Log the body data before making the API call
+    const requestBody = {
+      username: username,
+      full_name: fullname,
+      phone_number: phone,
+      email: email,
+      password: password,
+      user_type: "user",
+    };
+    console.log('Request body:', requestBody);
+    console.log(JSON.stringify(requestBody))
 
+    // Call your API endpoint here to register the user
+    fetch(`${env.API_URL}/api/driver/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Handle success response
+      console.log('Registration successful:', data);
+      alert('Your registration is successful!');
+      // You can add navigation logic here to navigate to another screen
+    })
+    .catch(error => {
+      // Handle error
+      console.error('Registration failed:', error);
+      alert('Registration failed. Please try again later.');
+    });
+  };
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create Profile</Text>
@@ -26,8 +58,7 @@ const RegisterPage = () => {
         <TextInput
           style={styles.input}
           value={username}
-          onChangeText={(text) => setUsername(text)}
-          required
+          onChangeText={text => setUsername(text)}
         />
       </View>
 
@@ -36,18 +67,7 @@ const RegisterPage = () => {
         <TextInput
           style={styles.input}
           value={fullname}
-          onChangeText={(text) => setFullname(text)}
-          required
-        />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text>Address:</Text>
-        <TextInput
-          style={styles.input}
-          value={address}
-          onChangeText={(text) => setAddress(text)}
-          required
+          onChangeText={text => setFullname(text)}
         />
       </View>
 
@@ -56,19 +76,8 @@ const RegisterPage = () => {
         <TextInput
           style={styles.input}
           value={phone}
-          onChangeText={(text) => setPhone(text)}
-          required
+          onChangeText={text => setPhone(text)}
         />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text>Gender:</Text>
-        <TouchableOpacity onPress={() => setGender('male')}>
-          <Text>Male</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setGender('female')}>
-          <Text>Female</Text>
-        </TouchableOpacity>
       </View>
 
       <View style={styles.formGroup}>
@@ -76,8 +85,7 @@ const RegisterPage = () => {
         <TextInput
           style={styles.input}
           value={email}
-          onChangeText={(text) => setEmail(text)}
-          required
+          onChangeText={text => setEmail(text)}
         />
       </View>
 
@@ -86,20 +94,9 @@ const RegisterPage = () => {
         <TextInput
           style={styles.input}
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={text => setPassword(text)}
           secureTextEntry
-          required
         />
-      </View>
-
-      <View style={styles.formGroup}>
-        <Text>Vehicle Type:</Text>
-        <TouchableOpacity onPress={() => setVehicleType('automated')}>
-          <Text>Automated</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setVehicleType('manual')}>
-          <Text>Manual</Text>
-        </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={registrationSuccess}>
@@ -136,7 +133,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#9b59b6',
     borderRadius: 8,
     padding: 12,
     alignItems: 'center',
