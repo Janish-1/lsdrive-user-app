@@ -1,191 +1,99 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
-import Geocoder from 'react-native-geocoding';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
 
-Geocoder.init('AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c');
-
 const Dashboard = () => {
-  const [pickupLocation, setPickupLocation] = useState({ name: '', coords: null });
-  const [destinationLocation, setDestinationLocation] = useState({ name: '', coords: null });
   const navigation = useNavigation();
+  const mapRef = useRef(null);
+  const [pickupLocation, setPickupLocation] = useState(null);
+  const [destination, setDestination] = useState(null);
 
-  const SendCheckoutPage = () => {
-    navigation.navigate('CheckoutPage');
+  const GOOGLE_API_KEY = 'AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c';
+
+  const animateToLocation = (location) => {
+    mapRef.current?.animateToRegion({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
+    }, 1000);
   };
 
-  const getNameFromCoords = async (coords) => {
-    try {
-      const response = await Geocoder.from(coords.latitude, coords.longitude);
-      if (response.results.length > 0) {
-        return response.results[0].formatted_address;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error('Error getting name from coordinates:', error);
-      return null;
-    }
-  };
-
-  const getCoordsFromAddress = async (address) => {
-    try {
-      const response = await Geocoder.from(address);
-      if (response.results.length > 0) {
-        const { lat, lng } = response.results[0].geometry.location;
-        return { latitude: lat, longitude: lng };
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error('Error getting coordinates from address:', error);
-      return null;
-    }
-  };
-
-  const handlePickupLocationChange = async (text) => {
-    setPickupLocation({ ...pickupLocation, name: text });
-
-    // Convert the address to coordinates
-    const coords = await getCoordsFromAddress(text);
-    if (coords) {
-      const name = await getNameFromCoords(coords);
-      setPickupLocation({ name: name || text, coords });
-    }
-  };
-
-  const handleDestinationLocationChange = async (text) => {
-    setDestinationLocation({ ...destinationLocation, name: text });
-
-    // Convert the address to coordinates
-    const coords = await getCoordsFromAddress(text);
-    if (coords) {
-      const name = await getNameFromCoords(coords);
-      setDestinationLocation({ name: name || text, coords });
-    }
-  };
-
-  useEffect(() => {
-    const fetchLocation = async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Location permission not granted');
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      setPickupLocation({ ...pickupLocation, coords: location.coords });
+  const onPickupSelected = (details) => {
+    const newPickupLocation = {
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
     };
-
-    fetchLocation();
-  }, []);
-
-  const handleMapPress = (event) => {
-    const { coordinate } = event.nativeEvent;
-
-    if (!pickupLocation.coords) {
-      setPickupLocation({ ...pickupLocation, coords: coordinate });
-    } else if (!destinationLocation.coords) {
-      setDestinationLocation({ ...destinationLocation, coords: coordinate });
-    }
+    setPickupLocation(newPickupLocation);
+    animateToLocation(newPickupLocation);
   };
 
-  // const drawerRef = useRef(null);
-
-  const handleHomePress = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.error('Location permission not granted');
-      return;
-    }
-
-    const location = await Location.getCurrentPositionAsync({});
-    const homeAddress = 'Home'; // Replace with the actual home address
-    setPickupLocation({ name: homeAddress, coords: location.coords });
-
-    // Close the drawer after updating the location
-    drawerRef.current.closeDrawer();
+  const onDestinationSelected = (details) => {
+    const newDestination = {
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+    };
+    setDestination(newDestination);
+    animateToLocation(newDestination);
   };
-
-  // const renderDrawerContent = () => (
-  //   <View style={styles.drawerContent}>
-  //     <View style={styles.centeredContainer}>
-  //       <Image source={require('../assets/img/logo.png')} style={styles.profileImage} />
-  //       <Text style={styles.profileName}>Your Name</Text>
-  //     </View>
-
-  //     <TouchableOpacity style={styles.drawerOption} onPress={handleHomePress}>
-  //       <Ionicons name="home" size={24} color="black" />
-  //       <Text style={styles.drawerOptionText}>Home</Text>
-  //     </TouchableOpacity>
-
-  //     <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Change Password pressed')}>
-  //       <Ionicons name="lock-closed" size={24} color="black" />
-  //       <Text style={styles.drawerOptionText}>Change Password</Text>
-  //     </TouchableOpacity>
-
-  //     <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Options pressed')}>
-  //       <Ionicons name="settings" size={24} color="black" />
-  //       <Text style={styles.drawerOptionText}>Options</Text>
-  //     </TouchableOpacity>
-  //   </View>
-  // );
-
-  // const openDrawer = () => {
-  //   drawerRef.current.openDrawer();
-  // };
 
   return (
-    // <DrawerLayoutAndroid
-    //   ref={drawerRef}
-    //   drawerWidth={200}
-    //   drawerPosition="left"
-    //   renderNavigationView={renderDrawerContent}
-    // >
-      <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: pickupLocation.coords ? pickupLocation.coords.latitude : 37.78825,
-            longitude: pickupLocation.coords ? pickupLocation.coords.longitude : -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+    <View style={styles.container}>
+      <MapView
+        ref={mapRef}
+        style={StyleSheet.absoluteFillObject}
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        {pickupLocation && <Marker coordinate={pickupLocation} title="Pickup Location" />}
+        {destination && <Marker coordinate={destination} title="Destination Location" />}
+      </MapView>
+
+      <View style={styles.inputContainer}>
+        <GooglePlacesAutocomplete
+          placeholder='Enter pickup location'
+          onPress={(data, details = null) => onPickupSelected(details)}
+          fetchDetails={true}
+          query={{
+            key: GOOGLE_API_KEY,
+            language: 'en',
           }}
-          onPress={handleMapPress}
-        >
-          {pickupLocation.coords && <Marker coordinate={pickupLocation.coords} title={pickupLocation.name || "Pickup"} />}
-          {destinationLocation.coords && (
-            <Marker coordinate={destinationLocation.coords} title={destinationLocation.name || "Destination"} />
-          )}
-        </MapView>
-        <View style={styles.inputContainer}>
-          {/* <TouchableOpacity style={styles.drawerButton} onPress={openDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
-          </TouchableOpacity> */}
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Pickup Location Name"
-            value={pickupLocation.name}
-            onChangeText={handlePickupLocationChange}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Destination Location Name"
-            value={destinationLocation.name}
-            onChangeText={handleDestinationLocationChange}
-          />
-        </View>
-        <TouchableOpacity style={styles.bookButton} onPress={SendCheckoutPage}>
-          <Text style={styles.bookButtonText}>Book</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.currentLocationButton} onPress={() => console.log('Current Location pressed')}>
-          <Ionicons name="locate" size={24} color="black" />
-        </TouchableOpacity>
+          styles={{
+            textInputContainer: styles.textInputContainer,
+            textInput: styles.locationInput,
+          }}
+        />
+        <GooglePlacesAutocomplete
+          placeholder='Enter destination location'
+          onPress={(data, details = null) => onDestinationSelected(details)}
+          fetchDetails={true}
+          query={{
+            key: GOOGLE_API_KEY,
+            language: 'en',
+          }}
+          styles={{
+            textInputContainer: styles.textInputContainer,
+            textInput: styles.locationInput,
+          }}
+        />
       </View>
-    // </DrawerLayoutAndroid>
+
+      <TouchableOpacity style={styles.locateButton} onPress={() => {}}>
+        <Ionicons name="locate-outline" size={24} color="white" />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('CheckoutPage')}>
+        <Text style={styles.bookButtonText}>Book</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -193,80 +101,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
   inputContainer: {
     position: 'absolute',
-    top: 40,
-    left: 16,
-    right: 16,
-    zIndex: 1,
+    top: Platform.OS === 'ios' ? 40 : 20,
+    width: '100%',
+    zIndex: 5,
   },
-  input: {
-    marginBottom: 8,
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  drawerContent: {
-    flex: 1,
-    padding: 16,
-  },
-  drawerButton: {
-    padding: 10,
-    backgroundColor: 'white',
+  textInputContainer: {
+    backgroundColor: 'rgba(255,255,255,0.9)',
     borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 16,
-    marginRight: 320,
-    marginTop: 16,
+    marginHorizontal: 10,
+    marginTop: 5,
   },
-  centeredContainer: {
-    alignItems: 'center',
-  },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: 8,
-  },
-  profileName: {
+  locationInput: {
+    height: 44,
+    color: '#5d5d5d',
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
   },
-  drawerOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  drawerOptionText: {
-    marginLeft: 8,
-    fontSize: 16,
+  locateButton: {
+    position: 'absolute',
+    bottom: 30,
+    left: '35%',
+    marginLeft: -25,
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 20,
   },
   bookButton: {
     position: 'absolute',
-    bottom: 16,
-    alignSelf: 'center',
-    backgroundColor: '#9b59b6',
-    padding: 8,
-    borderRadius: 10,
-    alignItems: 'center',
+    bottom: 30,
+    left: '65%',
+    marginLeft: -50,
+    backgroundColor: 'black',
+    padding: 15,
+    borderRadius: 30,
   },
   bookButtonText: {
     color: 'white',
+    fontWeight: 'bold',
     fontSize: 16,
-  },
-  currentLocationButton: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 25,
   },
 });
 

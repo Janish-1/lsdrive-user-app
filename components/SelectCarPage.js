@@ -1,10 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image, Dimensions, DrawerLayoutAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectCarPage = () => {
     const navigation = useNavigation();
+    const [userData, setUserData] = useState(null);
+    const [username,setusername] = useState('');
+    const [profileimage,setprofileimage] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Retrieve user_id from AsyncStorage
+                const value = await AsyncStorage.getItem('user_id');
+
+                // Check if user_id exists
+                if (value) {
+                    // Make a fetch call to get user data
+                    const response = await fetch(`http://lsdrivebackend.ramo.co.in/api/driver/${value}`);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const responseData = await response.json();
+                    setusername(responseData.username);
+                    setprofileimage(responseData.profileimage);
+                    setUserData(responseData.main);
+                } else {
+                    console.error('User ID not found in AsyncStorage');
+                    // Handle the case where user_id is not present in AsyncStorage
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                // Handle errors, show an error message or redirect to a different screen
+            }
+        };
+
+        // Fetch user data initially
+        fetchData();
+
+        // Fetch user data every 5 seconds
+        const intervalId = setInterval(fetchData, 5000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
+    }, []); // The empty dependency array ensures the effect runs only once when the component mounts
 
     const [rideType, setRideType] = useState('');
     const [selectedCar, setSelectedCar] = useState('');
@@ -34,8 +77,8 @@ const SelectCarPage = () => {
     const drawerContent = (
         <View style={styles.drawerContent}>
             <View style={styles.centeredContainer}>
-                <Image source={require('../assets/img/logo.png')} style={styles.profileImage} />
-                <Text style={styles.profileName}>Janish Pancholi</Text>
+                <Image source={profileimage} style={styles.profileImage} />
+                <Text style={styles.profileName}>{username}</Text>
             </View>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Home pressed')}>
                 <Ionicons name="home" size={24} color="black" />
@@ -79,7 +122,7 @@ const SelectCarPage = () => {
             </TouchableOpacity>
         </View>
     );
-    
+
     let drawerRef = null;
 
     const openDrawer = () => {
@@ -98,7 +141,7 @@ const SelectCarPage = () => {
                     <TouchableOpacity style={styles.drawerButton} onPress={openDrawer}>
                         <Ionicons name="menu" size={32} color="white" />
                     </TouchableOpacity>
-                    <Text style={styles.welcomeText}>Welcome Janish Pancholi</Text>
+                    <Text style={styles.welcomeText}>Welcome {username}</Text>
                 </View>
                 <View style={styles.imageContainer}>
                     <View style={styles.imageBox}>

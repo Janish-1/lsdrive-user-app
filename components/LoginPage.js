@@ -1,49 +1,49 @@
 import React , {useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginPage = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const loginSuccess = () => {
-    // Log the body data before making the API call
-    const requestBody = {
-      username: username,
-      password: password,
-    };
-    console.log('Request body:', requestBody);
-    console.log(JSON.stringify(requestBody))
+  const loginSuccess = async () => {
+    try {
+      const requestBody = {
+        username: username,
+        password: password,
+      };
 
-    // Call your API endpoint here to register the user
-    fetch(`http://lsdrivebackend.ramo.co.in/api/login/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-    .then(response => {
+      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      return response.json();
-    })
-    .then(data => {
-      // Handle success response
-      console.log('Login successful:', data);
+
+      const responseData = await response.json();
+      const { user_id } = responseData.main;
+      
+      console.log('Login successful. User ID:', user_id);
       alert('Your Login is successful!');
-      navigation.navigate('Dashboard');
-    })
-    .catch(error => {
-      // Handle error
+      
+      // Store user_id in AsyncStorage
+      await AsyncStorage.setItem('user_id', user_id.toString());
+
+      // Navigate to the SelectCarPage
+      navigation.navigate('SelectCarPage');
+    } catch (error) {
       console.error('Login failed:', error);
       alert('Login failed. Please try again later.');
-    });
+    }
   };
-
+  
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
       <View style={styles.inner}>

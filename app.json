@@ -7,10 +7,16 @@
       "**/*"
     ],
     "android": {
-      "package": "com.anonymous.lsdriveuserapp"
+      "package": "com.anonymous.lsdriveuserapp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c"
+      }
     },
     "ios": {
-      "bundleIdentifier": "com.anonymous.lsdriveuserapp"
+      "bundleIdentifier": "com.anonymous.lsdriveuserapp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c"
+      }
     },
     "extra": {
       "eas": {
