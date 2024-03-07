@@ -1,27 +1,4 @@
 {
-  "expo": {
-    "name": "lsdrive-user-app",
-    "slug": "lsdrive-user-app",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "android": {
-      "package": "com.anonymous.lsdriveuserapp",
-      "config": {
-        "googleMapsApiKey": "AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c"
-      }
-    },
-    "ios": {
-      "bundleIdentifier": "com.anonymous.lsdriveuserapp",
-      "config": {
-        "googleMapsApiKey": "AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c"
-      }
-    },
-    "extra": {
-      "eas": {
-        "projectId": "943aa6a3-5958-4689-a62a-9220d13a3793"
-      }
-    }
-  }
+  "name": "LSdriveUserApp",
+  "displayName": "LSdriveUserApp"
 }
