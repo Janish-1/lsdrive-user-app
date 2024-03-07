@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient'; // Import from react-native-linear-gradient
 import { useNavigation } from '@react-navigation/native';
 
 const HomePage = () => {
-  const navigation = useNavigation(); // Add this line to get the navigation object
+  const navigation = useNavigation();
 
   const handleLoginPress = () => {
     console.log('Login pressed');

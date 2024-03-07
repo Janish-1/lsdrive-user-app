@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image, Dimensions, DrawerLayoutAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SelectCarPage = () => {
     const navigation = useNavigation();
     const [userData, setUserData] = useState(null);
-    const [username,setusername] = useState('');
-    const [profileimage,setprofileimage] = useState('');
+    const [username, setusername] = useState('');
+    const [profileimage, setprofileimage] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -81,43 +81,43 @@ const SelectCarPage = () => {
                 <Text style={styles.profileName}>{username}</Text>
             </View>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Home pressed')}>
-                <Ionicons name="home" size={24} color="black" />
+                <ion-icon name="home" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Home</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Rides pressed')}>
-                <Ionicons name="car" size={24} color="black" />
+                <ion-icon name="car" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Rides</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Fare Chart pressed')}>
-                <Ionicons name="cash" size={24} color="black" />
+                <ion-icon name="cash" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Fare Chart</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Wallet pressed')}>
-                <Ionicons name="wallet" size={24} color="black" />
+                <ion-icon name="wallet" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Wallet</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('About Us pressed')}>
-                <Ionicons name="information-circle" size={24} color="black" />
+                <ion-icon name="information-circle" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>About Us</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Refer and Earn pressed')}>
-                <Ionicons name="people" size={24} color="black" />
+                <ion-icon name="people" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Refer and Earn</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('FAQ pressed')}>
-                <Ionicons name="help-circle" size={24} color="black" />
+                <ion-icon name="help-circle" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>FAQ</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Help and Support pressed')}>
-                <Ionicons name="help-circle-outline" size={24} color="black" />
+                <ion-icon name="help-circle-outline" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Help and Support</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Preferred Driver pressed')}>
-                <Ionicons name="person" size={24} color="black" />
+                <ion-icon name="person" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Preferred Driver</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Share App pressed')}>
-                <Ionicons name="share-social" size={24} color="black" />
+                <ion-icon name="share-social" size={24} color="black" />
                 <Text style={styles.drawerOptionText}>Share App</Text>
             </TouchableOpacity>
         </View>
@@ -139,7 +139,7 @@ const SelectCarPage = () => {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.drawerButton} onPress={openDrawer}>
-                        <Ionicons name="menu" size={32} color="white" />
+                        <ion-icon name="menu" size={32} color="white" />
                     </TouchableOpacity>
                     <Text style={styles.welcomeText}>Welcome {username}</Text>
                 </View>

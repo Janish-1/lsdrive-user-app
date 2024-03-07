@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { Ionicons } from '@expo/vector-icons';
+import Geolocation from '@react-native-community/geolocation';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [pickupLocation, setPickupLocation] = useState(null);
   const [destination, setDestination] = useState(null);
 
-  const GOOGLE_API_KEY = 'AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c';
+  const GOOGLE_API_KEY = 'AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c'; // Assuming you have set up react-native-dotenv
 
   const animateToLocation = (location) => {
     mapRef.current?.animateToRegion({
