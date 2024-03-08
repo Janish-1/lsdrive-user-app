@@ -19,12 +19,68 @@ const SelectCarPage = () => {
     const [userData, setUserData] = useState(null);
     const [username, setusername] = useState('');
     const [profileimage, setprofileimage] = useState('');
+    const [rideData, setRideData] = useState({
+        rideType: 'IN-CITY', // Default value for rideType
+        selectedCar: null,   // Default value for selectedCar
+    });
+
+    useEffect(() => {
+        // Load saved ride data from AsyncStorage when the component mounts
+        loadRideData();
+    }, []);
+
+
+    const selectCar = (carId) => {
+        setSelectedCar(carId);
+        setRideData({ ...rideData, selectedCar: carId });
+        saveRideData({ ...rideData, selectedCar: carId });
+    };
+
+    const handleRideTypeChange = (type) => {
+        setRideType(type);
+        setRideData({ ...rideData, rideType: type });
+        saveRideData({ ...rideData, rideType: type });
+    };
+
+    const saveRideData = async (data) => {
+        try {
+            await AsyncStorage.setItem('rideData', JSON.stringify(data));
+            const allData = await getAllDataInStorage(); // Wait for the result
+            console.log('AsyncStorage updated:', allData);
+        } catch (error) {
+            console.error('Error saving ride data:', error);
+        }
+    };
+
+    const loadRideData = async () => {
+        try {
+            const data = await AsyncStorage.getItem('rideData');
+            if (data) {
+                const parsedData = JSON.parse(data);
+                setRideType(parsedData.rideType);
+                setSelectedCar(parsedData.selectedCar);
+                setRideData(parsedData);
+            }
+        } catch (error) {
+            console.error('Error loading ride data:', error);
+        }
+    };
+
+    const getAllDataInStorage = async () => {
+        try {
+            const data = await AsyncStorage.getItem('rideData');
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error('Error getting data from AsyncStorage:', error);
+            return null;
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Retrieve user_id from AsyncStorage
-                const value = await AsyncStorage.getItem('user_id');
+                const value = await AsyncStorage.getItem('user');
 
                 // Check if user_id exists
                 if (value) {
@@ -70,10 +126,6 @@ const SelectCarPage = () => {
         { id: 5, name: 'Luxury', image: require('../assets/img/luxury.jpg') },
     ];
 
-    const selectCar = (carId) => {
-        setSelectedCar(carId);
-    };
-
     const LocationButtonClick = () => {
         console.log('Pressed Select Location');
         navigation.navigate('Dashboard');
@@ -115,19 +167,19 @@ const SelectCarPage = () => {
                 <Text style={styles.drawerOptionText}>Refer and Earn</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('FAQ pressed')}>
-                <FAQ width="24" height="24"/>
+                <FAQ width="24" height="24" />
                 <Text style={styles.drawerOptionText}>FAQ</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Help and Support pressed')}>
-                <Help width="24" height="24"/>
+                <Help width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Help and Support</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Preferred Driver pressed')}>
-                <Man width="24" height="24"/>
+                <Man width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Preferred Driver</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Share App pressed')}>
-                <Share width="24" height="24"/>
+                <Share width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Share App</Text>
             </TouchableOpacity>
         </View>
@@ -171,14 +223,14 @@ const SelectCarPage = () => {
                     <View style={styles.rideTypeContainer}>
                         <TouchableOpacity
                             style={[styles.rideTypeButton, rideType === 'IN-CITY' && styles.selectedRideType]}
-                            onPress={() => setRideType('IN-CITY')}
+                            onPress={() => handleRideTypeChange('IN-CITY')}
                         >
                             <Text style={styles.rideTypeText}>IN-CITY</Text>
                             {rideType === 'IN-CITY' && <View style={styles.indicator} />}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.rideTypeButton, rideType === 'OUTSTATION' && styles.selectedRideType]}
-                            onPress={() => setRideType('OUTSTATION')}
+                            onPress={() => handleRideTypeChange('OUTSTATION')}
                         >
                             <Text style={styles.rideTypeText}>OUTSTATION</Text>
                             {rideType === 'OUTSTATION' && <View style={styles.indicator} />}

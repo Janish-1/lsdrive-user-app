@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Platform,Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -13,6 +13,23 @@ const Dashboard = () => {
   const [destination, setDestination] = useState(null);
 
   const GOOGLE_API_KEY = 'AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c'; // Assuming you have set up react-native-dotenv
+
+  // Get current device location
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const currentLocation = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+        setPickupLocation(currentLocation);
+        animateToLocation(currentLocation);
+        fetchAddress(currentLocation);
+      },
+      error => console.log('Error getting location:', error),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  };
 
   const animateToLocation = (location) => {
     mapRef.current?.animateToRegion({
@@ -41,6 +58,28 @@ const Dashboard = () => {
     animateToLocation(newDestination);
   };
 
+  const fetchAddress = async location => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_API_KEY}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        const address = data.results[0].formatted_address;
+        Alert.alert('Current Location', address);
+        setPickupLocation(address);
+      }
+    } catch (error) {
+      console.error('Error fetching address:', error);
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <MapView
@@ -86,7 +125,7 @@ const Dashboard = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.locateButton} onPress={() => { }}>
+      <TouchableOpacity style={styles.locateButton} onPress={getCurrentLocation}>
         <Location
           width="24"
           height="24"

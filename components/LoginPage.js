@@ -41,8 +41,11 @@ const LoginPage = () => {
       console.log('Login successful. User ID:', user_id);
       alert('Your Login is successful!');
 
+      // Clearing the Previous Data
+      await AsyncStorage.clear();
+
       // Store user_id in AsyncStorage
-      await AsyncStorage.setItem('user_id', user_id.toString());
+      await AsyncStorage.setItem('user', user_id.toString());
 
       // Navigate to the SelectCarPage
       navigation.navigate('SelectCarPage');
