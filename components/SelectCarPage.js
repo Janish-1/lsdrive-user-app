@@ -68,7 +68,8 @@ const SelectCarPage = () => {
 
     const getAllDataInStorage = async () => {
         try {
-            const data = await AsyncStorage.getItem('rideData');
+            const keys = await AsyncStorage.getAllKeys();
+            const data = await AsyncStorage.getItem(keys);
             return data ? JSON.parse(data) : null;
         } catch (error) {
             console.error('Error getting data from AsyncStorage:', error);

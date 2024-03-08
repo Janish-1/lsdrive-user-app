@@ -20,6 +20,8 @@ const Dashboard = () => {
     destination_address: null,
   });
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     // Load rideData from AsyncStorage when the component mounts
     loadRideData();

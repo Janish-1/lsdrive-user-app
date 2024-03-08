@@ -1,31 +1,131 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  Platform,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Back from '../assets/icons/location-svgrepo-com.svg';
+import Back from '../assets/icons/go-back-svgrepo-com.svg';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CheckoutPage = () => {
-    const navigation = useNavigation();
-    const [pickupDate, setPickupDate] = useState('Tue 05 Mar - 12:42 PM');
-    const [dropDate, setDropDate] = useState('Tue 05 Mar - 5:42 PM');
-    const [dropCity, setdropCity] = useState('Indore');
-    const [showPopup, setShowPopup] = useState(false); // State for controlling popup visibility
+  const navigation = useNavigation();
+  const [pickupDate, setPickupDate] = useState(new Date());
+  const [dropDate, setDropDate] = useState(new Date());
+  const [passengers, setPassengers] = useState('');
+  const [dropLocation, setDropLocation] = useState('No Location Selected');
+  const [showPopup, setShowPopup] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDateType, setSelectedDateType] = useState('pickup');
+  const [rideData, setRideData] = useState({
+    passengers: null,
+    pickupDateTime: null,
+    dropDateTime: null,
+    dropLocation: null,
+  });
 
-    const handleGoBack = () => {
-        navigation.goBack();
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
+  useEffect(() => {
+    // Load rideData from AsyncStorage when the component mounts
+    loadRideData();
+  }, []);
+
+  const saveRideData = async (data) => {
+    try {
+      await AsyncStorage.setItem('rideData', JSON.stringify(data));
+      const allData = await getAllDataInStorage(); // Wait for the result
+      console.log('AsyncStorage updated:', allData);
+    } catch (error) {
+      console.error('Error saving ride data:', error);
+    }
+  };
+
+  const loadRideData = async () => {
+    try {
+      const data = await AsyncStorage.getItem('rideData');
+      if (data) {
+        const parsedData = JSON.parse(data);
+        setRideData(parsedData);
+      }
+    } catch (error) {
+      console.error('Error loading ride data:', error);
+    }
+  };
+
+  const getAllDataInStorage = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const data = await AsyncStorage.multiGet(keys);
+      return data ? JSON.stringify(data) : null;
+    } catch (error) {
+      console.error('Error getting data from AsyncStorage:', error);
+      return null;
+    }
+  };
+
+  const handleLocationPickerPress = () => {
+    navigation.navigate('Dashboard');
+  };
+
+  const handleScheduleRide = async () => {
+    // Calculate drop date and time based on pickup date (assuming a fixed duration for the ride)
+    const rideDurationInHours = 2; // Example: 2 hours ride duration
+    const dropDateTime = new Date(pickupDate.getTime() + rideDurationInHours * 60 * 60 * 1000);
+
+    // Save ride data to AsyncStorage
+    const newRideData = {
+      passengers: parseInt(passengers, 10),
+      pickupDateTime: pickupDate.toISOString(),
+      dropDateTime: dropDateTime.toISOString(),
+      dropLocation,
     };
 
-    const handleLocationPickerPress = () => {
-        navigation.navigate('Dashboard');
-    };
+    setRideData(prevData => ({
+        ...prevData,
+        passengers: newRideData.passengers,
+        pickupDateTime: newRideData.pickupDateTime,
+        dropDateTime: newRideData.dropDateTime,
+        dropLocation: newRideData.dropLocation,
+    }));
+    await saveRideData(newRideData);
+    setShowPopup(true); // Show popup after scheduling the ride
+  };
 
-    const handleScheduleRide = () => {
-        // Logic to schedule the ride
-        setShowPopup(true); // Show popup after scheduling the ride
-    };
+  const handleClosePopup = () => {
+    setShowPopup(false); // Close the popup
+  };
 
-    const handleClosePopup = () => {
-        setShowPopup(false); // Close the popup
-    };
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      if (selectedDateType === 'pickup') {
+        setPickupDate(selectedDate);
+        setRideData((prevData) => ({
+          ...prevData,
+          pickupDateTime: selectedDate.toISOString(),
+        }));
+      } else {
+        setDropDate(selectedDate);
+        setRideData((prevData) => ({
+          ...prevData,
+          dropDateTime: selectedDate.toISOString(),
+        }));
+      }
+    }
+  };
+
+  const showDatepicker = (type) => {
+    setShowDatePicker(true);
+    setSelectedDateType(type);
+  };
 
     return (
         <View style={styles.container}>
@@ -36,28 +136,37 @@ const CheckoutPage = () => {
                 <Text style={styles.headerTitle}>Check out</Text>
             </View>
 
+
             <View style={styles.section}>
-                <Text style={styles.label}>Drop City</Text>
-                <TouchableOpacity style={styles.selectButton} onPress={handleLocationPickerPress}>
-                    <Text style={styles.selectButtonText}>Select</Text>
+                <Text style={styles.label}>Passengers</Text>
+                <TextInput
+                    style={styles.input}
+                    keyboardType="numeric"
+                    placeholder="Enter number of passengers"
+                    value={passengers}
+                    onChangeText={(text) => setPassengers(text)}
+                />
+            </View>
+
+            <View style={styles.section}>
+                <Text style={styles.label}>Drop Location</Text>
+                <TouchableOpacity onPress={handleLocationPickerPress} style={styles.changeButton}>
+                    <Text style={styles.changeButtonText}>Change</Text>
                 </TouchableOpacity>
-                <Text style={styles.dateText}>{dropCity}</Text>
+                <Text>{dropLocation}</Text>
             </View>
 
             <View style={styles.section}>
                 <Text style={styles.label}>Pickup Date & Time</Text>
-                <TouchableOpacity style={styles.changeButton}>
+                <TouchableOpacity style={styles.changeButton} onPress={() => showDatepicker('pickup')}>
                     <Text style={styles.changeButtonText}>Change</Text>
                 </TouchableOpacity>
-                <Text style={styles.dateText}>{pickupDate}</Text>
+                <Text style={styles.dateText}>{pickupDate.toLocaleString()}</Text>
             </View>
 
             <View style={styles.section}>
                 <Text style={styles.label}>Drop Date & Time</Text>
-                <TouchableOpacity style={styles.selectButton}>
-                    <Text style={styles.selectButtonText}>Change</Text>
-                </TouchableOpacity>
-                <Text style={styles.dateText}>{dropDate}</Text>
+                <Text style={styles.dateText}>{dropDate.toLocaleString()}</Text>
             </View>
 
             <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleRide}>
@@ -74,10 +183,9 @@ const CheckoutPage = () => {
                 <View style={styles.popupContainer}>
                     <View style={styles.popup}>
                         <Text style={styles.popupTitle}>Ride Details</Text>
-                        <Text style={styles.popupText}>Pickup Date & Time: {pickupDate}</Text>
-                        <Text style={styles.popupText}>Drop Date & Time: {dropDate}</Text>
-                        <Text style={styles.popupText}>Drop City: {dropCity}</Text>
-                        {/* Add more details as needed */}
+                        <Text style={styles.popupText}>Pickup Date & Time: {pickupDate.toLocaleString()}</Text>
+                        <Text style={styles.popupText}>Drop Date & Time: {dropDate.toLocaleString()}</Text>
+                        <Text style={styles.popupText}>Drop Location: {dropLocation}</Text>
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity style={styles.closeButton}>
                                 <Text style={styles.checkoutText}>Checkout</Text>
@@ -89,6 +197,18 @@ const CheckoutPage = () => {
                     </View>
                 </View>
             </Modal>
+
+            {/* Date Picker */}
+            {showDatePicker && (
+                <DateTimePicker
+                    value={selectedDateType === 'pickup' ? pickupDate : dropDate}
+                    mode="datetime"
+                    is24Hour={false}
+                    display="default"
+                    onChange={handleDateChange}
+                    minimumDate={new Date()} // Restrict to current date and future dates
+                />
+            )}
         </View>
     );
 };
@@ -172,7 +292,7 @@ const styles = StyleSheet.create({
     },
     scheduleButtonText: {
         fontSize: 18,
-        color: 'black',
+        color: 'white',
         fontWeight: 'bold',
     },
     // Styles for Popup
@@ -210,6 +330,9 @@ const styles = StyleSheet.create({
     closeButtonText: {
         fontSize: 16,
         color: 'white',
+    },
+    datePicker: {
+        backgroundColor: 'white',
     },
 });
 
