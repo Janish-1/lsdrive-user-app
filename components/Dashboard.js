@@ -1,20 +1,54 @@
-import React, { useState, useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Platform,Alert } from 'react-native';
+import React, { useState, useRef,useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Platform, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
 import Location from '../assets/icons/location-svgrepo-com.svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Dashboard = () => {
-  const navigation = useNavigation();
   const mapRef = useRef(null);
   const [pickupLocation, setPickupLocation] = useState(null);
   const [destination, setDestination] = useState(null);
+  const [rideData, setRideData] = useState({
+    current_latitude: null,
+    current_longitude: null,
+    current_address: null,
+    destination_latitude: null,
+    destination_longitude: null,
+    destination_address: null,
+  });
 
-  const GOOGLE_API_KEY = 'AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c'; // Assuming you have set up react-native-dotenv
+  useEffect(() => {
+    // Load rideData from AsyncStorage when the component mounts
+    loadRideData();
+  }, []);
 
-  // Get current device location
+  const saveRideData = async (data) => {
+    try {
+      await AsyncStorage.setItem('rideData', JSON.stringify(data));
+      const allData = await getAllDataInStorage(); // Wait for the result
+      console.log('AsyncStorage updated:', allData);
+    } catch (error) {
+      console.error('Error saving ride data:', error);
+    }
+  };
+
+  const loadRideData = async () => {
+    try {
+      const data = await AsyncStorage.getItem('rideData');
+      if (data) {
+        const parsedData = JSON.parse(data);
+        setRideData(parsedData);
+      }
+    } catch (error) {
+      console.error('Error loading ride data:', error);
+    }
+  };
+
+  const GOOGLE_API_KEY = 'AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c';
+
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
@@ -40,25 +74,66 @@ const Dashboard = () => {
     }, 1000);
   };
 
-  const onPickupSelected = (details) => {
+  const onPickupSelected = async (details) => {
     const newPickupLocation = {
       latitude: details.geometry.location.lat,
       longitude: details.geometry.location.lng,
+      address: details.formatted_address,
     };
     setPickupLocation(newPickupLocation);
     animateToLocation(newPickupLocation);
+    // Update rideData with new pickup location
+    setRideData(prevData => ({
+      ...prevData,
+      current_latitude: newPickupLocation.latitude,
+      current_longitude: newPickupLocation.longitude,
+      current_address: newPickupLocation.address,
+    }));
+    // Save updated rideData to AsyncStorage
+    saveRideData({
+      ...rideData,
+      current_latitude: newPickupLocation.latitude,
+      current_longitude: newPickupLocation.longitude,
+      current_address: newPickupLocation.address,
+    });
   };
 
-  const onDestinationSelected = (details) => {
+  const onDestinationSelected = async (details) => {
     const newDestination = {
       latitude: details.geometry.location.lat,
       longitude: details.geometry.location.lng,
+      address: details.formatted_address,
     };
     setDestination(newDestination);
     animateToLocation(newDestination);
+    // Update rideData with new destination
+    setRideData(prevData => ({
+      ...prevData,
+      destination_latitude: newDestination.latitude,
+      destination_longitude: newDestination.longitude,
+      destination_address: newDestination.address,
+    }));
+    // Save updated rideData to AsyncStorage
+    saveRideData({
+      ...rideData,
+      destination_latitude: newDestination.latitude,
+      destination_longitude: newDestination.longitude,
+      destination_address: newDestination.address,
+    });
   };
 
-  const fetchAddress = async location => {
+  const getAllDataInStorage = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      const data = await AsyncStorage.multiGet(keys);
+      return data.map(([key, value]) => ({ [key]: JSON.parse(value) }));
+    } catch (error) {
+      console.error('Error getting data from AsyncStorage:', error);
+      return null;
+    }
+  };
+
+  const fetchAddress = async (location) => {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_API_KEY}`
@@ -79,7 +154,7 @@ const Dashboard = () => {
       console.error('Error fetching address:', error);
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <MapView
