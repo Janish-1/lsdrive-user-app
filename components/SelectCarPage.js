@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image, Dimensions, DrawerLayoutAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import SvgUri from 'react-native-svg-uri'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Home from '../assets/icons/home-1-svgrepo-com.svg';
+import FAQ from '../assets/icons/faq-svgrepo-com.svg';
+import Help from '../assets/icons/help-svgrepo-com.svg';
+import Transit from '../assets/icons/calgary-transit-my-fare-svgrepo-com.svg';
+import Car from '../assets/icons/car-side-svgrepo-com.svg';
+import Refer from '../assets/icons/refer-to-svgrepo-com.svg';
+import Menu from '../assets/icons/menu-svgrepo-com.svg';
+import Share from '../assets/icons/share-svgrepo-com.svg';
+import Wallet from '../assets/icons/wallet-svgrepo-com.svg';
+import About from '../assets/icons/about-svgrepo-com.svg';
+import Man from '../assets/icons/man-svgrepo-com.svg';
 
 const SelectCarPage = () => {
     const navigation = useNavigation();
@@ -81,83 +91,43 @@ const SelectCarPage = () => {
                 <Text style={styles.profileName}>{username}</Text>
             </View>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Home pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/home-1-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Home width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Home</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Rides pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/car-side-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Car width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Rides</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Fare Chart pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/calgary-transit-my-fare-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Transit width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Fare Chart</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Wallet pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/wallet-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Wallet width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Wallet</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('About Us pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/about-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <About width="24" height="24" />
                 <Text style={styles.drawerOptionText}>About Us</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Refer and Earn pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/refer-to-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Refer width="24" height="24" />
                 <Text style={styles.drawerOptionText}>Refer and Earn</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('FAQ pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/faq-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <FAQ width="24" height="24"/>
                 <Text style={styles.drawerOptionText}>FAQ</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Help and Support pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/help-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Help width="24" height="24"/>
                 <Text style={styles.drawerOptionText}>Help and Support</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Preferred Driver pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/man-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Man width="24" height="24"/>
                 <Text style={styles.drawerOptionText}>Preferred Driver</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.drawerOption} onPress={() => console.log('Share App pressed')}>
-                <SvgUri
-                    width="24"
-                    height="24"
-                    source={require('../assets/icons/share-svgrepo-com.svg')} // replace with your SVG file path
-                />
+                <Share width="24" height="24"/>
                 <Text style={styles.drawerOptionText}>Share App</Text>
             </TouchableOpacity>
         </View>
@@ -179,11 +149,7 @@ const SelectCarPage = () => {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.drawerButton} onPress={openDrawer}>
-                        <SvgUri
-                            width="24"
-                            height="24"
-                            source={require('../assets/icons/menu-svgrepo-com.svg')} // replace with your SVG file path
-                        />
+                        <Menu width="24" height="24" />
                     </TouchableOpacity>
                     <Text style={styles.welcomeText}>Welcome {username}</Text>
                 </View>

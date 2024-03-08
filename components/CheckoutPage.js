@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import Back from '../assets/icons/location-svgrepo-com.svg';
 
 const CheckoutPage = () => {
     const navigation = useNavigation();
@@ -31,7 +31,7 @@ const CheckoutPage = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-                    <ion-icon name="arrow-back-outline" size={32} color="black" />
+                    <Back width="24" height="24" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Check out</Text>
             </View>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 10,
-      },
+    },
     container: {
         flex: 1,
         backgroundColor: 'white',

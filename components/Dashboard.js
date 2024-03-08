@@ -4,6 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
+import Location from '../assets/icons/location-svgrepo-com.svg';
 
 const Dashboard = () => {
   const navigation = useNavigation();
@@ -86,10 +87,9 @@ const Dashboard = () => {
       </View>
 
       <TouchableOpacity style={styles.locateButton} onPress={() => { }}>
-        <SvgUri
+        <Location
           width="24"
           height="24"
-          source={require('../assets/icons/home-1-svgrepo-com.svg')} // replace with your SVG file path
         />
       </TouchableOpacity>
 
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     bottom: 30,
     left: '35%',
     marginLeft: -25,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     padding: 10,
     borderRadius: 20,
   },
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     bottom: 30,
     left: '65%',
     marginLeft: -50,
-    backgroundColor: 'black',
+    backgroundColor: 'purple',
     padding: 15,
     borderRadius: 30,
   },
