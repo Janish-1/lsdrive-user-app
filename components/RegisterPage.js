@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Touchable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -7,6 +8,12 @@ const RegisterPage = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigation = useNavigation();
+
+  const Sendtologin = () => {
+    navigation.navigate('LoginPage');
+  };
 
   const registrationSuccess = () => {
     // Log the body data before making the API call
@@ -102,7 +109,9 @@ const RegisterPage = () => {
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
 
-      <Text>Already have an account? <Text style={styles.link}>Sign in</Text></Text>
+      <Text>Already have an account? <TouchableOpacity onPress={Sendtologin}>
+        <Text style={styles.link}>Sign in</Text></TouchableOpacity>
+        </Text>
     </View>
   );
 };
@@ -111,21 +120,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    justifyContent: 'center',
+    position: 'relative',
+    marginTop: 100,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: 'black',
     marginBottom: 16,
   },
   formGroup: {
     marginBottom: 16,
+    width: 'auto',
+    color: 'black',
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 8,
+    color: 'black',
   },
   link: {
     color: 'blue',
@@ -137,9 +151,9 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     marginTop: 16,
+    marginBottom: 10,
   },
   buttonText: {
-    color: 'white',
     fontWeight: 'bold',
   },
 });

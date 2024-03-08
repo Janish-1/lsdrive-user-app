@@ -1,5 +1,5 @@
-import React , {useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Touchable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,6 +7,14 @@ const LoginPage = () => {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const sendToRegister = async () => {
+    navigation.navigate('RegisterPage');
+  };
+
+  const sendToReset = async () => {
+    navigation.navigate('ResetPassword');
+  };
 
   const loginSuccess = async () => {
     try {
@@ -29,10 +37,10 @@ const LoginPage = () => {
 
       const responseData = await response.json();
       const { user_id } = responseData.main;
-      
+
       console.log('Login successful. User ID:', user_id);
       alert('Your Login is successful!');
-      
+
       // Store user_id in AsyncStorage
       await AsyncStorage.setItem('user_id', user_id.toString());
 
@@ -43,7 +51,7 @@ const LoginPage = () => {
       alert('Login failed. Please try again later.');
     }
   };
-  
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
       <View style={styles.inner}>
@@ -59,23 +67,26 @@ const LoginPage = () => {
           <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry onChangeText={(text) => setPassword(text)} />
         </View>
 
-        <Text style={styles.link}>Forgot your password?</Text>
+        <TouchableOpacity onPress={sendToReset}><Text style={styles.link}>Forgot your password?</Text></TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonContainer} onPress={loginSuccess}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
         <View style={styles.signupContainer}>
-          <Text>Don't have an account? <Text style={styles.signupLink}>Signup!</Text></Text>
-        </View>
+          <Text>Don't have an account? <TouchableOpacity onPress={sendToRegister}>
+            <Text style={styles.signupLink}>Signup!</Text>
+        </TouchableOpacity></Text>
       </View>
-    </KeyboardAvoidingView>
+    </View>
+    </KeyboardAvoidingView >
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
   },
   inner: {
     flex: 1,
@@ -86,6 +97,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: 'black',
     marginBottom: 16,
   },
   inputContainer: {
@@ -94,12 +106,14 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 8,
+    color: 'black',
     fontWeight: 'bold',
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
+    color: 'black',
     padding: 12,
   },
   link: {

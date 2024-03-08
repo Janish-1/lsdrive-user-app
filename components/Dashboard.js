@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { useNavigation } from '@react-navigation/native';
 
@@ -86,8 +85,12 @@ const Dashboard = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.locateButton} onPress={() => {}}>
-        <Ionicons name="locate-outline" size={24} color="white" />
+      <TouchableOpacity style={styles.locateButton} onPress={() => { }}>
+        <SvgUri
+          width="24"
+          height="24"
+          source={require('../assets/icons/home-1-svgrepo-com.svg')} // replace with your SVG file path
+        />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('CheckoutPage')}>

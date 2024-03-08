@@ -31,7 +31,7 @@ const CheckoutPage = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-                    <Ionicons name="arrow-back-outline" size={32} color="black" />
+                    <ion-icon name="arrow-back-outline" size={32} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Check out</Text>
             </View>
