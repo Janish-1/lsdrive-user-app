@@ -69,8 +69,8 @@ const SelectCarPage = () => {
     const getAllDataInStorage = async () => {
         try {
             const keys = await AsyncStorage.getAllKeys();
-            const data = await AsyncStorage.getItem(keys);
-            return data ? JSON.parse(data) : null;
+            const data = await AsyncStorage.multiGet(keys);
+            return data.map(([key, value]) => ({ [key]: JSON.parse(value) }));
         } catch (error) {
             console.error('Error getting data from AsyncStorage:', error);
             return null;

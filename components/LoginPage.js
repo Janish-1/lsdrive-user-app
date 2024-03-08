@@ -41,9 +41,6 @@ const LoginPage = () => {
       console.log('Login successful. User ID:', user_id);
       alert('Your Login is successful!');
 
-      // Clearing the Previous Data
-      await AsyncStorage.clear();
-
       // Store user_id in AsyncStorage
       await AsyncStorage.setItem('user', user_id.toString());
 

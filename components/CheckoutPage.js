@@ -26,17 +26,16 @@ const CheckoutPage = () => {
     passengers: null,
     pickupDateTime: null,
     dropDateTime: null,
-    dropLocation: null,
   });
-
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
 
   useEffect(() => {
     // Load rideData from AsyncStorage when the component mounts
     loadRideData();
   }, []);
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   const saveRideData = async (data) => {
     try {
@@ -54,6 +53,9 @@ const CheckoutPage = () => {
       if (data) {
         const parsedData = JSON.parse(data);
         setRideData(parsedData);
+        // Update passengers and dropLocation states
+        setPassengers(parsedData.passengers ? String(parsedData.passengers) : '');
+        setDropLocation(parsedData.destination_address || 'No Location Selected');
       }
     } catch (error) {
       console.error('Error loading ride data:', error);
@@ -64,7 +66,7 @@ const CheckoutPage = () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
       const data = await AsyncStorage.multiGet(keys);
-      return data ? JSON.stringify(data) : null;
+      return data.map(([key, value]) => ({ [key]: JSON.parse(value) }));
     } catch (error) {
       console.error('Error getting data from AsyncStorage:', error);
       return null;
@@ -85,17 +87,24 @@ const CheckoutPage = () => {
       passengers: parseInt(passengers, 10),
       pickupDateTime: pickupDate.toISOString(),
       dropDateTime: dropDateTime.toISOString(),
-      dropLocation,
     };
 
-    setRideData(prevData => ({
-        ...prevData,
-        passengers: newRideData.passengers,
-        pickupDateTime: newRideData.pickupDateTime,
-        dropDateTime: newRideData.dropDateTime,
-        dropLocation: newRideData.dropLocation,
+    // Update local state with other parameters and new ride data
+    setRideData((prevData) => ({
+      ...prevData,
+      passengers: newRideData.passengers,
+      pickupDateTime: newRideData.pickupDateTime,
+      dropDateTime: newRideData.dropDateTime,
     }));
-    await saveRideData(newRideData);
+
+    // Save updated rideData to AsyncStorage
+    await saveRideData({
+      ...rideData,
+      passengers: newRideData.passengers,
+      pickupDateTime: newRideData.pickupDateTime,
+      dropDateTime: newRideData.dropDateTime,
+    });
+
     setShowPopup(true); // Show popup after scheduling the ride
   };
 
@@ -127,213 +136,264 @@ const CheckoutPage = () => {
     setSelectedDateType(type);
   };
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-                    <Back width="24" height="24" />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Check out</Text>
+  const handleCheckout = async () => {
+    // Retrieve user_id from AsyncStorage
+    const value = await AsyncStorage.getItem('user');
+
+    // Prepare the query parameters
+    const checkoutQuery = {
+      current_latitude: rideData.current_latitude.toString(),
+      current_longitude: rideData.current_longitude.toString(),
+      destination_latitude: rideData.destination_latitude.toString(),
+      destination_longitude: rideData.destination_longitude.toString(),
+      destination_address: rideData.destination_address,
+      people_count: rideData.passengers,
+      pickup_time: rideData.pickupDateTime.split('T')[1], // Extract time from ISO string
+      user: value,
+    };
+
+    // Run your fetch function with the checkoutQuery
+    try {
+      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/create-booking-data/', {
+        method: 'POST', // Change the method based on your API requirements
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other headers as needed
+        },
+        body: JSON.stringify(checkoutQuery),
+      });
+
+      // Handle the response as needed
+      if (response.ok) {
+        const responseData = await response.json();
+        try {
+          const key = 'rideData';
+          await AsyncStorage.removeItem(key);
+          console.log('Key removed successfully');
+        } catch (error) {
+          console.error('Error removing key:', error);
+        } 
+        console.log('Checkout successful:', responseData);
+      } else {
+        console.error('Checkout failed:', response.status);
+      }
+    } catch (error) {
+      console.error('Error during checkout:', error);
+    }
+
+    // Close the popup after the fetch is complete
+    handleClosePopup();
+  };
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+          <Back width="24" height="24" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Check out</Text>
+      </View>
+
+
+      <View style={styles.section}>
+        <Text style={styles.label}>Passengers</Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          placeholder="Enter number of passengers"
+          value={passengers}
+          onChangeText={(text) => setPassengers(text)}
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>Drop Location</Text>
+        <TouchableOpacity onPress={handleLocationPickerPress} style={styles.changeButton}>
+          <Text style={styles.changeButtonText}>Change</Text>
+        </TouchableOpacity>
+        <Text>{dropLocation}</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>Pickup Date & Time</Text>
+        <TouchableOpacity style={styles.changeButton} onPress={() => showDatepicker('pickup')}>
+          <Text style={styles.changeButtonText}>Change</Text>
+        </TouchableOpacity>
+        <Text style={styles.dateText}>{pickupDate.toLocaleString()}</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>Drop Date & Time</Text>
+        <Text style={styles.dateText}>{dropDate.toLocaleString()}</Text>
+      </View>
+
+      <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleRide}>
+        <Text style={styles.scheduleButtonText}>SCHEDULE RIDE</Text>
+      </TouchableOpacity>
+
+      {/* Checkout Popup */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showPopup}
+        onRequestClose={handleClosePopup}
+      >
+        <View style={styles.popupContainer}>
+          <View style={styles.popup}>
+            <Text style={styles.popupTitle}>Ride Details</Text>
+            <Text style={styles.popupText}>Pickup Date & Time: {pickupDate.toLocaleString()}</Text>
+            <Text style={styles.popupText}>Drop Date & Time: {dropDate.toLocaleString()}</Text>
+            <Text style={styles.popupText}>Drop Location: {dropLocation}</Text>
+            <Text style={styles.popupText}>Passengers: {rideData.passengers}</Text>
+            <Text style={styles.popupText}>Pickup Date & Time: {rideData.pickupDateTime}</Text>
+            <Text style={styles.popupText}>Drop Date & Time: {rideData.dropDateTime}</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.closeButton} onPress={handleCheckout}>
+                <Text style={styles.checkoutText}>Checkout</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.closeButton} onPress={handleClosePopup}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
             </View>
-
-
-            <View style={styles.section}>
-                <Text style={styles.label}>Passengers</Text>
-                <TextInput
-                    style={styles.input}
-                    keyboardType="numeric"
-                    placeholder="Enter number of passengers"
-                    value={passengers}
-                    onChangeText={(text) => setPassengers(text)}
-                />
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.label}>Drop Location</Text>
-                <TouchableOpacity onPress={handleLocationPickerPress} style={styles.changeButton}>
-                    <Text style={styles.changeButtonText}>Change</Text>
-                </TouchableOpacity>
-                <Text>{dropLocation}</Text>
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.label}>Pickup Date & Time</Text>
-                <TouchableOpacity style={styles.changeButton} onPress={() => showDatepicker('pickup')}>
-                    <Text style={styles.changeButtonText}>Change</Text>
-                </TouchableOpacity>
-                <Text style={styles.dateText}>{pickupDate.toLocaleString()}</Text>
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.label}>Drop Date & Time</Text>
-                <Text style={styles.dateText}>{dropDate.toLocaleString()}</Text>
-            </View>
-
-            <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleRide}>
-                <Text style={styles.scheduleButtonText}>SCHEDULE RIDE</Text>
-            </TouchableOpacity>
-
-            {/* Checkout Popup */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={showPopup}
-                onRequestClose={handleClosePopup}
-            >
-                <View style={styles.popupContainer}>
-                    <View style={styles.popup}>
-                        <Text style={styles.popupTitle}>Ride Details</Text>
-                        <Text style={styles.popupText}>Pickup Date & Time: {pickupDate.toLocaleString()}</Text>
-                        <Text style={styles.popupText}>Drop Date & Time: {dropDate.toLocaleString()}</Text>
-                        <Text style={styles.popupText}>Drop Location: {dropLocation}</Text>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.closeButton}>
-                                <Text style={styles.checkoutText}>Checkout</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.closeButton} onPress={handleClosePopup}>
-                                <Text style={styles.closeButtonText}>Close</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
-            {/* Date Picker */}
-            {showDatePicker && (
-                <DateTimePicker
-                    value={selectedDateType === 'pickup' ? pickupDate : dropDate}
-                    mode="datetime"
-                    is24Hour={false}
-                    display="default"
-                    onChange={handleDateChange}
-                    minimumDate={new Date()} // Restrict to current date and future dates
-                />
-            )}
+          </View>
         </View>
-    );
+      </Modal>
+
+      {/* Date Picker */}
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDateType === 'pickup' ? pickupDate : dropDate}
+          mode="datetime"
+          is24Hour={false}
+          display="default"
+          onChange={handleDateChange}
+          minimumDate={new Date()} // Restrict to current date and future dates
+        />
+      )}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 10,
-        backgroundColor: '#9b59b6',
-        borderBottomWidth: 1,
-        borderBottomColor: '#eaeaea',
-        paddingTop: 30,
-    },
-    backButton: {
-        marginRight: 20,
-        padding: 10,
-    },
-    backButtonText: {
-        fontSize: 24,
-        color: '#ffc107',
-    },
-    headerTitle: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#000',
-    },
-    section: {
-        padding: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eaeaea',
-    },
-    label: {
-        fontSize: 18,
-        color: '#333',
-        marginBottom: 10,
-    },
-    selectButton: {
-        padding: 10,
-        backgroundColor: '#9b59b6',
-        borderRadius: 5,
-        alignSelf: 'flex-start',
-    },
-    selectButtonText: {
-        fontSize: 16,
-        color: '#333',
-    },
-    changeButton: {
-        padding: 10,
-        backgroundColor: '#9b59b6',
-        borderRadius: 5,
-        alignSelf: 'flex-start',
-        marginTop: 10,
-    },
-    changeButtonText: {
-        fontSize: 16,
-        color: 'black',
-    },
-    dateText: {
-        fontSize: 16,
-        color: '#333',
-        marginTop: 10,
-    },
-    scheduleButton: {
-        backgroundColor: '#9b59b6',
-        padding: 15,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 20,
-    },
-    scheduleButtonText: {
-        fontSize: 18,
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    // Styles for Popup
-    popupContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    popup: {
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        padding: 20,
-    },
-    popupTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    popupText: {
-        fontSize: 16,
-        marginBottom: 5,
-    },
-    closeButton: {
-        backgroundColor: '#9b59b6',
-        padding: 10,
-        borderRadius: 5,
-        alignSelf: 'flex-end',
-        marginTop: 10,
-    },
-    checkoutText: {
-        fontSize: 16,
-        color: 'white',
-    },
-    closeButtonText: {
-        fontSize: 16,
-        color: 'white',
-    },
-    datePicker: {
-        backgroundColor: 'white',
-    },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    backgroundColor: '#9b59b6',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eaeaea',
+    paddingTop: 30,
+  },
+  backButton: {
+    marginRight: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    fontSize: 24,
+    color: '#ffc107',
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  section: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eaeaea',
+  },
+  label: {
+    fontSize: 18,
+    color: '#333',
+    marginBottom: 10,
+  },
+  selectButton: {
+    padding: 10,
+    backgroundColor: '#9b59b6',
+    borderRadius: 5,
+    alignSelf: 'flex-start',
+  },
+  selectButtonText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  changeButton: {
+    padding: 10,
+    backgroundColor: '#9b59b6',
+    borderRadius: 5,
+    alignSelf: 'flex-start',
+    marginTop: 10,
+  },
+  changeButtonText: {
+    fontSize: 16,
+    color: 'black',
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#333',
+    marginTop: 10,
+  },
+  scheduleButton: {
+    backgroundColor: '#9b59b6',
+    padding: 15,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 20,
+  },
+  scheduleButtonText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  // Styles for Popup
+  popupContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  popup: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+  },
+  popupTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  popupText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  closeButton: {
+    backgroundColor: '#9b59b6',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'flex-end',
+    marginTop: 10,
+  },
+  checkoutText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  closeButtonText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  datePicker: {
+    backgroundColor: 'white',
+  },
 });
 
 export default CheckoutPage;
