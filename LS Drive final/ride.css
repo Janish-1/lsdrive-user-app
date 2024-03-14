@@ -1,0 +1,52 @@
+
+        body{
+             background: linear-gradient(90deg, #6C63AC, #FFFFFF);
+        }
+        .shadow-box {
+            width: 400px; /* Adjust width as needed */
+            height: 570px; /* Adjust height as needed */
+            background: linear-gradient(90deg, #6C63AC, #FFFFFF); /* Background color */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
+            border-radius: 10px; /* Border radius */
+            margin: 20px auto; /* Adjust margin as needed */
+            padding: 20px; /* Adjust padding as needed */
+        }
+        .footer{
+            width:380px; /* Set the width to 100% */
+            height: 40px; /* Adjust height as needed */
+            background-color:#6C63AC;
+            margin-top: 450px; /* Adjust margin as needed */
+            padding-left: 40px;
+            border-radius: 10px;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            outline: none;
+            background-color: #6C63AC;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+
+        
+        .button:active {
+            background-color:white; 
+            color: #6C63AC;/* Change background color when button is clicked */
+        }
+        .button1{ 
+            padding-right: 10px;
+
+        }
+        .button2{
+           padding-left:10px;
+        }
+        .ride{
+            text-align: center;
+        }
+    
+    

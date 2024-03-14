@@ -14,33 +14,18 @@ import Wallet from '../assets/icons/wallet-svgrepo-com.svg';
 import About from '../assets/icons/about-svgrepo-com.svg';
 import Man from '../assets/icons/man-svgrepo-com.svg';
 
-const SelectCarPage = () => {
+const Rides = () => {
     const navigation = useNavigation();
     const [userData, setUserData] = useState(null);
     const [username, setusername] = useState('');
     const [profileimage, setprofileimage] = useState('');
-    const [rideData, setRideData] = useState({
-        rideType: 'IN-CITY', // Default value for rideType
-        selectedCar: null,   // Default value for selectedCar
-    });
+    const [rideData, setRideData] = useState();
+    const [showPastRides, setShowPastRides] = useState(false);
 
     useEffect(() => {
         // Load saved ride data from AsyncStorage when the component mounts
         loadRideData();
     }, []);
-
-
-    const selectCar = (carId) => {
-        setSelectedCar(carId);
-        setRideData({ ...rideData, selectedCar: carId });
-        saveRideData({ ...rideData, selectedCar: carId });
-    };
-
-    const handleRideTypeChange = (type) => {
-        setRideType(type);
-        setRideData({ ...rideData, rideType: type });
-        saveRideData({ ...rideData, rideType: type });
-    };
 
     const saveRideData = async (data) => {
         try {
@@ -116,31 +101,10 @@ const SelectCarPage = () => {
         return () => clearInterval(intervalId);
     }, []); // The empty dependency array ensures the effect runs only once when the component mounts
 
-    const [rideType, setRideType] = useState('');
-    const [selectedCar, setSelectedCar] = useState('');
-
-    const cars = [
-        { id: 1, name: 'Hatchback', image: require('../assets/img/hatchback.jpg') },
-        { id: 2, name: 'Sedan', image: require('../assets/img/sedan.jpg') },
-        { id: 3, name: 'SUV/MUV', image: require('../assets/img/suv.jpg') },
-        { id: 4, name: 'EV', image: require('../assets/img/ev.jpg') },
-        { id: 5, name: 'Luxury', image: require('../assets/img/luxury.jpg') },
-    ];
-
-    const LocationButtonClick = () => {
-        console.log('Pressed Select Location');
-        navigation.navigate('Dashboard');
-    };
-
-    const NextButtonClick = () => {
-        console.log('Next button pressed');
-        navigation.navigate('CheckoutPage');
-    };
-
     const RedirectPage = (page) => {
         console.log(page, ' Pressed');
         navigation.navigate(page);
-    };
+    }
 
     const Logout = async () => {
         try {
@@ -241,56 +205,23 @@ const SelectCarPage = () => {
                     <TouchableOpacity style={styles.drawerButton} onPress={openDrawer}>
                         <Menu width="24" height="24" />
                     </TouchableOpacity>
-                    <Text style={styles.welcomeText}> Welcome {username}</Text>
+                    <Text style={styles.welcomeText}>Welcome {username}</Text>
                 </View>
-                <View style={styles.imageContainer}>
-                    <View style={styles.imageBox}>
-                        <Image source={require('../assets/img/car.gif')} style={styles.bigImage} />
-                    </View>
-                </View>
-
-                <View contentContainerStyle={styles.contentContainer}>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.pickupText}>Please Select Your Pickup Address</Text>
-                        <TouchableOpacity style={styles.changeButton} onPress={LocationButtonClick}>
-                            <Text style={styles.changeButtonText}>Change</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.carSelectionContainer}>
-                    <View style={styles.rideTypeContainer}>
-                        <TouchableOpacity
-                            style={[styles.rideTypeButton, rideType === 'IN-CITY' && styles.selectedRideType]}
-                            onPress={() => handleRideTypeChange('IN-CITY')}
-                        >
-                            <Text style={styles.rideTypeText}>IN-CITY</Text>
-                            {rideType === 'IN-CITY' && <View style={styles.indicator} />}
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[styles.rideTypeButton, rideType === 'OUTSTATION' && styles.selectedRideType]}
-                            onPress={() => handleRideTypeChange('OUTSTATION')}
-                        >
-                            <Text style={styles.rideTypeText}>OUTSTATION</Text>
-                            {rideType === 'OUTSTATION' && <View style={styles.indicator} />}
-                        </TouchableOpacity>
-                    </View>
-
-                    <ScrollView contentContainerStyle={styles.scrollViewContent} horizontal>
-                        {cars.map((car) => (
-                            <TouchableOpacity
-                                key={car.id}
-                                style={[styles.carOption, selectedCar === car.id && styles.selectedCar]}
-                                onPress={() => selectCar(car.id)}
-                            >
-                                <Image source={car.image} style={styles.carImage} />
-                                <Text style={styles.carText}>{car.name}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-
-                    <TouchableOpacity style={styles.nextButton}>
-                        <Text style={styles.nextButtonText} onPress={NextButtonClick}>NEXT</Text>
+                <View style={styles.nheader}>
+                    <TouchableOpacity onPress={() => setShowPastRides(true)}>
+                        <Text style={[styles.nheaderText, showPastRides && styles.activeHeaderText]}>Past Rides</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setShowPastRides(false)}>
+                        <Text style={[styles.nheaderText, !showPastRides && styles.activeHeaderText]}>Active Rides</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.shadowBox}>
+                    <Text style={styles.rideTitle}>{showPastRides ? 'Past Rides' : 'Active Rides'}</Text>
+                    {showPastRides ? (
+                        <Text style={styles.noRidesText}>We don't have any completed ride to show here</Text>
+                    ) : (
+                        <Text style={styles.noRidesText}>Active ride content goes here</Text>
+                    )}
                 </View>
             </View>
         </DrawerLayoutAndroid >
@@ -462,30 +393,27 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-    pickupText: {
-        fontSize: 16,
+    nheader: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    nheaderText: {
+        fontSize: 18,
+        fontWeight: 'bold',
         color: '#333',
     },
-    changeButton: {
-        backgroundColor: '#ddd',
-        padding: 5,
-        borderRadius: 5,
-        marginTop: 10,
+    activeHeaderText: {
+        color: '#9b59b6',
     },
-    changeButtonText: {
-        fontSize: 16,
-        color: '#000',
-    },
-    addressText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginTop: 10,
-    },
-    carSelectionContainer: {
-        backgroundColor: '#fff',
+    shadowBox: {
+        backgroundColor: '#f5f5f5',
         borderRadius: 10,
         padding: 20,
-        marginBottom: 20,
+        marginHorizontal: 20,
+        marginTop: 20,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -495,18 +423,27 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-    bookButton: {
-        backgroundColor: '#ffc107',
-        padding: 10,
-        alignItems: 'center',
-        borderRadius: 5,
-        marginTop: 20,
-        alignSelf: 'center',
+    rideTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
-    bookButtonText: {
-        fontSize: 20,
+    noRidesText: {
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    button: {
+        backgroundColor: '#9b59b6',
         color: '#fff',
+        padding: 10,
+        borderRadius: 5,
+        textAlign: 'center',
+        width: '45%',
     },
 });
 
-export default SelectCarPage;
+export default Rides;

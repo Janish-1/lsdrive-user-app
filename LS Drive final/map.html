@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map Example</title>
+<link rel="stylesheet" href="map.css">
+</head>
+<body>
+
+
+
+<!-- HTML element to contain the map -->
+<div id="map"></div>
+<!-- Button element -->
+<div><button id="openPopupButton" class="add">Change Address</button></div>
+
+  <!-- Textbox with a pattern to enforce minimum four letters and a placeholder -->
+  <div class="popup-container" id="popupContainer">
+    <form>
+    <span class="close-icon" onclick="closePopup()">X</span>
+  <input type="text" id="textbox" name="textbox" pattern=".{4,}"  title="Please enter at least 4 characters" placeholder="Enter at least four letters" size="15"><br><br>
+  </form>
+  </div>
+
+  <script src="index.js"></script>
+
+  
+    <!-- First text box field -->
+    <div>
+    <label for="textbox1">Flat House Number </label><br>
+    <input type="text" id="textbox1" name="textbox1" placeholder="Please enter Flat/House Number">
+    </div>
+    <!-- Second text box field -->
+    <div>
+    <label for="textbox2">Landmark</label><br>
+    <input type="text" id="textbox2" name="textbox2" placeholder="Please Enter Landmark">
+    </div>
+    
+    <input type="radio" id="option1" name="option" value="option1">
+    <label for="option1">HOME</label>
+  
+    <input type="radio" id="option2" name="option" value="option2">
+    <label for="option2">OFFICE</label>
+  
+    <input type="radio" id="option3" name="option" value="option3">
+    <label for="option3">OTHER</label><br><br>
+  
+    <!-- Submit button -->
+    <input type="submit" value="SAVE" id="submit1" class="add1">
+  </form>
+<script src="rama.js"></script>
+
+  <script>
+    // JavaScript to toggle the visibility of the hidden content
+    document.getElementById('toggleButton').addEventListener('click', function() {
+      var content = document.getElementById('hiddenContent');
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+      } else {
+        content.style.display = 'none';
+      }
+    });
+  </script>
+  
+
+
+<script>
+  // JavaScript to initialize and display the map
+  function initMap() {
+    // Coordinates to center the map
+    var centerCoordinates = { lat: 51.5074, lng: -0.1278 }; // London coordinates
+
+    // Create a map object and specify the DOM element for display.
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: centerCoordinates,
+      zoom: 10 // Set the initial zoom level
+    });
+
+    // You can add additional features like markers, polygons, etc. here
+    // For example:
+    // var marker = new google.maps.Marker({ position: centerCoordinates, map: map });
+  }
+</script>
+
+<!-- Load the Google Maps JavaScript API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+
+</body>
+</html>

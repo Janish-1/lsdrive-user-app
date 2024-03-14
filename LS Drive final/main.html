@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Animated Sidebar Menu | CodingLab</title>
+      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+   </head>
+   <body><div class="container">
+      <div class="wrapper">
+         <input type="checkbox" id="btn" hidden>
+         <label for="btn" class="menu-btn">
+         <i class="fas fa-bars"></i>
+         <i class="fas fa-times"></i>
+         </label>
+         <nav id="sidebar">
+            <div class="title">
+               Harshita Thakur
+            </div>
+            <ul class="list-items">
+               <li><a href="main.html"><i class="fas fa-home"></i>Home</a></li>
+               <li><a href="rides.html"><i class="fas fa-sliders-h"></i>Rides</a></li>
+               <li><a href="farechart.html"><i class="fas fa-address-book"></i>Farechart</a></li>
+               <li><a href="#"><i class="fas fa-cog"></i>cc wallet</a></li>
+               <li><a href="about.html"><i class="fas fa-stream"></i>About Us</a></li>
+               <li><a href="#"><i class="fas fa-user"></i>Refer and Earn</a></li>
+               <li><a href="#"><i class="fas fa-globe-asia"></i>FAQ</a></li>
+               <li><a href="#"><i class="fas fa-envelope"></i>Help & Support</a></li>
+               <li><a href="#"><i class="fas fa-envelope"></i>Preferred Driver</a></li>
+               <li><a href="#"><i class="fas fa-envelope"></i>Share App</a></li>
+               <li><a href="#"><i class="fas fa-envelope"></i>Business Enquiry</a></li>
+              
+            </ul>
+         </nav>
+      </div>
+      <div class="second">Welcome Harshita Thakur</div>
+     
+    </div>
+    <div class="shadow-box">
+        <img src="car-img1.gif" alt="" class="imgfirst"></img>
+        <div class="h4"><p>Please Select Your Pickup Address</p></div>
+       <div class="map2">
+         <div class="mapimg2" ><img src="map_icon.png" alt="" class="mapimg"> </div>
+         <div><button id="openPopupButton" class="add">ADD ADDRESS</button></div>
+         <div class="popup-container" id="popupContainer">
+            <span class="close-icon" onclick="closePopup()">X</span>
+            <p><h2>Pickup Address</h2>
+            <a href="map.html" class="addnew">Add New Address></a><br/>Select From Saved Addresses</p>
+          
+          </div>
+          
+          
+      </div>
+      <div class="h3"><p>Please Select Your Ride Type</p></div>
+      <div class="side">
+         <div class="dropdown">
+               <button class="dropdown-btn">IN-CITY</button>
+                 <div class="dropdown-content">
+                  <a href="#link1">Link 1</a>
+                  <a href="#link2">Link 2</a>
+                 </div>
+               <button class="dropdown-btn">OUTSTATION</button>
+                <div class="dropdown-content">
+                 <a href="#link1" >Round Trip</a>
+                 <a href="#link2">One Way</a>
+   
+               </div>
+        </div>
+     </div>
+   </div>
+   <div class="p3"><p>Please Select Your Car </p></div>
+   <div class="wrapper1">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="carousel">
+         <img src="hatchback.jpg"alt="" class="car_img">
+         <img src="sedan.jpg"alt="" class="car_img">
+         <img src="luxury.jpg"alt="" class="car_img">
+         <img src="suv.jpg"alt="" class="car_img">
+         <img src="ev.jpg"alt="" class="car_img">
+      </div>
+
+   </div>
+   
+   
+   <button class="next_btn">NEXT</button> 
+   <script src="index.js"></script>
+   </body>
+</html>

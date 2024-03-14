@@ -7,6 +7,7 @@ import {
   Modal,
   TextInput,
   Platform,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Back from '../assets/icons/go-back-svgrepo-com.svg';
@@ -150,6 +151,7 @@ const CheckoutPage = () => {
       people_count: rideData.passengers,
       pickup_time: rideData.pickupDateTime.split('T')[1], // Extract time from ISO string
       user: value,
+      status: 1,
     };
 
     // Run your fetch function with the checkoutQuery
@@ -172,8 +174,10 @@ const CheckoutPage = () => {
           console.log('Key removed successfully');
         } catch (error) {
           console.error('Error removing key:', error);
-        } 
+        }
         console.log('Checkout successful:', responseData);
+        Alert.alert('Booking Successful', 'Your ride has been successfully booked.');
+        navigation.navigate('Rides');
       } else {
         console.error('Checkout failed:', response.status);
       }
@@ -240,12 +244,12 @@ const CheckoutPage = () => {
         <View style={styles.popupContainer}>
           <View style={styles.popup}>
             <Text style={styles.popupTitle}>Ride Details</Text>
-            <Text style={styles.popupText}>Pickup Date & Time: {pickupDate.toLocaleString()}</Text>
-            <Text style={styles.popupText}>Drop Date & Time: {dropDate.toLocaleString()}</Text>
-            <Text style={styles.popupText}>Drop Location: {dropLocation}</Text>
-            <Text style={styles.popupText}>Passengers: {rideData.passengers}</Text>
-            <Text style={styles.popupText}>Pickup Date & Time: {rideData.pickupDateTime}</Text>
-            <Text style={styles.popupText}>Drop Date & Time: {rideData.dropDateTime}</Text>
+            <Text style={styles.popupText}>Pickup Date & Time: {pickupDate ? pickupDate.toLocaleString() : 'No Data'}</Text>
+            <Text style={styles.popupText}>Drop Date & Time: {dropDate ? dropDate.toLocaleString() : 'No Data'}</Text>
+            <Text style={styles.popupText}>Drop Location: {dropLocation ? dropLocation : 'No Data'}</Text>
+            <Text style={styles.popupText}>Passengers: {rideData.passengers ? rideData.passengers : 'No Data'}</Text>
+            <Text style={styles.popupText}>Pickup Date & Time: {rideData.pickupDateTime ? rideData.pickupDateTime : 'No Data'}</Text>
+            <Text style={styles.popupText}>Drop Date & Time: {rideData.dropDateTime ? rideData.dropDateTime : 'No Data'}</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.closeButton} onPress={handleCheckout}>
                 <Text style={styles.checkoutText}>Checkout</Text>
