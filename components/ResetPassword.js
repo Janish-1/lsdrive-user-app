@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import {API_URL} from '@env';
 
 const Reset = () => {
   const navigation = useNavigation();
@@ -14,7 +15,7 @@ const Reset = () => {
   const handleForgotPassword = async () => {
     try {
       // Make the API call to the forgot password endpoint
-      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/forgot-password/', {
+      const response = await fetch('http://10.0.2.2:8000/api/forgot-password/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

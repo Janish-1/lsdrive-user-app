@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'; // Import from react-native-linear-gradient
 import { useNavigation } from '@react-navigation/native';
+import {API_URL} from '@env';
 
 const HomePage = () => {
   const navigation = useNavigation();

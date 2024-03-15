@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Touchable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import {API_URL} from '@env';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -29,7 +30,7 @@ const RegisterPage = () => {
     console.log(JSON.stringify(requestBody))
 
     // Call your API endpoint here to register the user
-    fetch(`http://lsdrivebackend.ramo.co.in/api/driver/`, {
+    fetch(`http://10.0.2.2:8000/api/driver/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

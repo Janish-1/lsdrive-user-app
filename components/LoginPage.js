@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Touchable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '@env';
 
 const LoginPage = () => {
   const navigation = useNavigation();
@@ -23,7 +24,7 @@ const LoginPage = () => {
         password: password,
       };
 
-      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/login/', {
+      const response = await fetch('http://10.0.2.2:8000/api/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

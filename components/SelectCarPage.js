@@ -13,6 +13,7 @@ import Share from '../assets/icons/share-svgrepo-com.svg';
 import Wallet from '../assets/icons/wallet-svgrepo-com.svg';
 import About from '../assets/icons/about-svgrepo-com.svg';
 import Man from '../assets/icons/man-svgrepo-com.svg';
+import {API_URL} from '@env';
 
 const SelectCarPage = () => {
     const navigation = useNavigation();
@@ -86,7 +87,7 @@ const SelectCarPage = () => {
                 // Check if user_id exists
                 if (value) {
                     // Make a fetch call to get user data
-                    const response = await fetch(`http://lsdrivebackend.ramo.co.in/api/driver/${value}`);
+                    const response = await fetch(`http://10.0.2.2:8000/api/driver/${value}`);
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -150,7 +151,7 @@ const SelectCarPage = () => {
             // Check if user_id exists
             if (value) {
                 // Make a fetch call to logout
-                const response = await fetch('http://lsdrivebackend.ramo.co.in/api/logout/', {
+                const response = await fetch('http://10.0.2.2:8000/api/logout/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -174,7 +175,6 @@ const SelectCarPage = () => {
     const drawerContent = (
         <View style={styles.drawerContent}>
             <View style={styles.centeredContainer}>
-                <Image source={profileimage} style={styles.profileImage} />
                 <Text style={styles.profileName}>{username}</Text>
             </View>
             <TouchableOpacity style={styles.drawerOption} onPress={() => RedirectPage('SelectCarPage')}>

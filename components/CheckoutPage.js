@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import Back from '../assets/icons/go-back-svgrepo-com.svg';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '@env';
 
 const CheckoutPage = () => {
   const navigation = useNavigation();
@@ -62,7 +63,7 @@ const CheckoutPage = () => {
       console.error('Error loading ride data:', error);
     }
   };
-
+  
   const getAllDataInStorage = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
@@ -147,6 +148,7 @@ const CheckoutPage = () => {
       current_longitude: rideData.current_longitude.toString(),
       destination_latitude: rideData.destination_latitude.toString(),
       destination_longitude: rideData.destination_longitude.toString(),
+      pickup_address: rideData.current_address.toString(),
       destination_address: rideData.destination_address,
       people_count: rideData.passengers,
       pickup_time: rideData.pickupDateTime.split('T')[1], // Extract time from ISO string
@@ -156,7 +158,7 @@ const CheckoutPage = () => {
 
     // Run your fetch function with the checkoutQuery
     try {
-      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/create-booking-data/', {
+      const response = await fetch('http://10.0.2.2:8000/api/create-booking-data/', {
         method: 'POST', // Change the method based on your API requirements
         headers: {
           'Content-Type': 'application/json',

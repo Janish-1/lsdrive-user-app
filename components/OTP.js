@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '@env';
 
 const NewPassword = () => {
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ const NewPassword = () => {
       };
 
       // Make the API call to set the new password
-      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/update-password/', {
+      const response = await fetch('http://10.0.2.2:8000/api/update-password/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
