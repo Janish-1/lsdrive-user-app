@@ -15,7 +15,7 @@ const Reset = () => {
   const handleForgotPassword = async () => {
     try {
       // Make the API call to the forgot password endpoint
-      const response = await fetch('http://10.0.2.2:8000/api/forgot-password/', {
+      const response = await fetch(`${API_URL}/api/forgot-password/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

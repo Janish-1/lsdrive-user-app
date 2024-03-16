@@ -30,7 +30,7 @@ const RegisterPage = () => {
     console.log(JSON.stringify(requestBody))
 
     // Call your API endpoint here to register the user
-    fetch(`http://10.0.2.2:8000/api/driver/`, {
+    fetch(`${API_URL}/api/driver/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const RegisterPage = () => {
       <Text style={styles.title}>Create Profile</Text>
 
       <View style={styles.formGroup}>
-        <Text>Username:</Text>
+        <Text style={styles.textform}>Username:</Text>
         <TextInput
           style={styles.input}
           value={username}
@@ -70,7 +70,7 @@ const RegisterPage = () => {
       </View>
 
       <View style={styles.formGroup}>
-        <Text>Fullname:</Text>
+        <Text style={styles.textform}>Fullname:</Text>
         <TextInput
           style={styles.input}
           value={fullname}
@@ -79,7 +79,7 @@ const RegisterPage = () => {
       </View>
 
       <View style={styles.formGroup}>
-        <Text>Phone Number:</Text>
+        <Text style={styles.textform}>Phone Number:</Text>
         <TextInput
           style={styles.input}
           value={phone}
@@ -88,7 +88,7 @@ const RegisterPage = () => {
       </View>
 
       <View style={styles.formGroup}>
-        <Text>Email:</Text>
+        <Text style={styles.textform}>Email:</Text>
         <TextInput
           style={styles.input}
           value={email}
@@ -97,7 +97,7 @@ const RegisterPage = () => {
       </View>
 
       <View style={styles.formGroup}>
-        <Text>Password:</Text>
+        <Text style={styles.textform}>Password:</Text>
         <TextInput
           style={styles.input}
           value={password}
@@ -156,6 +156,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
+  },
+  textform: {
+    color: 'black',
   },
 });
 

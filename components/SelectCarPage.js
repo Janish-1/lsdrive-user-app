@@ -87,7 +87,7 @@ const SelectCarPage = () => {
                 // Check if user_id exists
                 if (value) {
                     // Make a fetch call to get user data
-                    const response = await fetch(`http://10.0.2.2:8000/api/driver/${value}`);
+                    const response = await fetch(`${API_URL}/api/driver/${value}`);
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -151,7 +151,7 @@ const SelectCarPage = () => {
             // Check if user_id exists
             if (value) {
                 // Make a fetch call to logout
-                const response = await fetch('http://10.0.2.2:8000/api/logout/', {
+                const response = await fetch(`${API_URL}/api/logout/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

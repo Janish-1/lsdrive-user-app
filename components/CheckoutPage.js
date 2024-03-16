@@ -158,7 +158,7 @@ const CheckoutPage = () => {
 
     // Run your fetch function with the checkoutQuery
     try {
-      const response = await fetch('http://10.0.2.2:8000/api/create-booking-data/', {
+      const response = await fetch(`${API_URL}/api/create-booking-data/`, {
         method: 'POST', // Change the method based on your API requirements
         headers: {
           'Content-Type': 'application/json',

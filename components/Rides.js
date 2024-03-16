@@ -37,7 +37,7 @@ const Rides = () => {
                 // Check if user_id exists
                 if (value) {
                     // Make a fetch call to get user data
-                    const response = await fetch(`http://10.0.2.2:8000/api/driver/${value}`);
+                    const response = await fetch(`${API_URL}/api/driver/${value}`);
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -80,7 +80,7 @@ const Rides = () => {
             // Check if user_id exists
             if (value) {
                 // Make a fetch call to logout
-                const response = await fetch('http://10.0.2.2:8000/api/logout/', {
+                const response = await fetch(`${API_URL}/api/logout/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const Rides = () => {
             };
     
             // Make the API call to confirm the booking
-            const response = await fetch(`http://10.0.2.2:8000/api/update-from-user/${driverId}/`, {
+            const response = await fetch(`${API_URL}/api/update-from-user/${driverId}/`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ const Rides = () => {
 
                 if (showPastRides) {
                     // // Fetch past rides data
-                    // const response = await fetch(`http://10.0.2.2:8000/api/get-past-rides/${value}`);
+                    // const response = await fetch(`${API_URL}/api/get-past-rides/${value}`);
                     // if (!response.ok) {
                     //     throw new Error(`HTTP error! Status: ${response.status}`);
                     // }
@@ -193,7 +193,7 @@ const Rides = () => {
                     // setyourrides(data);
                 } else if (showActiveRides) {
                     // Fetch active rides data
-                    const response = await fetch(`http://10.0.2.2:8000/api/get-active-rides/${value}`);
+                    const response = await fetch(`${API_URL}/api/get-active-rides/${value}`);
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
@@ -201,7 +201,7 @@ const Rides = () => {
                     setyourrides(data);
                 } else if (showCurrentRides) {
                     // Fetch current rides data
-                    const response = await fetch(`http://10.0.2.2:8000/api/get-current-rides/${value}`);
+                    const response = await fetch(`${API_URL}/api/get-current-rides/${value}`);
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
@@ -209,7 +209,7 @@ const Rides = () => {
                     setyourrides(data);
                 } else if (showDriverAcceptedRides) {
                     // Fetch current rides data
-                    const response = await fetch(`http://10.0.2.2:8000/api/get-driveraccepted-rides/${value}`);
+                    const response = await fetch(`${API_URL}/api/get-driveraccepted-rides/${value}`);
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
