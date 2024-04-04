@@ -203,9 +203,6 @@ const SelectCarPage = () => {
             onPress={() => setIsDrawerOpen(false)}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
-          <View style={styles.centeredContainer}>
-            <Text style={styles.profileName}>{username}</Text>
-          </View>
           <TouchableOpacity
             style={styles.drawerOption}
             onPress={() => RedirectPage('SelectCarPage')}>
