@@ -22,7 +22,9 @@ const LoginPage = () => {
       const requestBody = {
         username: username,
         password: password,
-      };
+      }
+
+      console.log(requestBody);
 
       const response = await fetch(`${API_URL}/api/login/`, {
         method: 'POST',
@@ -31,25 +33,36 @@ const LoginPage = () => {
         },
         body: JSON.stringify(requestBody),
       });
-
+    
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+    
       const responseData = await response.json();
       const { user_id } = responseData.main;
-
+    
       console.log('Login successful. User ID:', user_id);
       alert('Your Login is successful!');
-
+    
       // Store user_id in AsyncStorage
       await AsyncStorage.setItem('user', user_id.toString());
-
+    
       // Navigate to the SelectCarPage
       navigation.navigate('SelectCarPage');
     } catch (error) {
       console.error('Login failed:', error);
-      alert('Login failed. Please try again later.');
+    
+      // Additional error handling based on error types
+      if (error instanceof TypeError) {
+        // Handle network errors or fetch errors
+        alert('Network error occurred. Please check your internet connection.');
+      } else if (error instanceof SyntaxError) {
+        // Handle JSON parsing errors
+        alert('Error parsing server response. Please try again later.');
+      } else {
+        // Handle other types of errors
+        alert('Login failed. Please try again later.');
+      }
     }
   };
 

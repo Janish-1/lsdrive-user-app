@@ -47,6 +47,7 @@ const Rides = () => {
                     setusername(responseData.username);
                     setprofileimage(responseData.profileimage);
                     setUserData(responseData.main);
+                    console.log("Data Fetched Success");
                 } else {
                     console.error('User ID not found in AsyncStorage');
                     // Handle the case where user_id is not present in AsyncStorage

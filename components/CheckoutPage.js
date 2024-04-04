@@ -181,10 +181,13 @@ const CheckoutPage = () => {
         Alert.alert('Booking Successful', 'Your ride has been successfully booked.');
         navigation.navigate('Rides');
       } else {
-        console.error('Checkout failed:', response.status);
+        const errorResponseData = await response.json();
+        console.error('Checkout failed:', errorResponseData.error); // Assuming error response includes an 'error' field
+        Alert.alert('Booking Failed', `Error: ${errorResponseData.error}`);
       }
     } catch (error) {
       console.error('Error during checkout:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
     }
 
     // Close the popup after the fetch is complete

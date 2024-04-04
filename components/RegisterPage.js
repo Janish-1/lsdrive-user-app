@@ -26,6 +26,7 @@ const RegisterPage = () => {
       password: password,
       user_type: "user",
     };
+    
     console.log('Request body:', requestBody);
     console.log(JSON.stringify(requestBody))
 
