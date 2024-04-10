@@ -6,11 +6,12 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { useNavigation } from '@react-navigation/native';
 import Location from '../assets/icons/location-svgrepo-com.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL} from '@env';
+import { API_URL } from '@env';
 
 const Dashboard = () => {
   const mapRef = useRef(null);
   const [pickupLocation, setPickupLocation] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
   const [destination, setDestination] = useState(null);
   const [rideData, setRideData] = useState({
     current_latitude: null,
@@ -26,6 +27,7 @@ const Dashboard = () => {
   useEffect(() => {
     // Load rideData from AsyncStorage when the component mounts
     loadRideData();
+    getCurrentLocation();
   }, []);
 
   const saveRideData = async (data) => {
@@ -55,15 +57,15 @@ const Dashboard = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        const currentLocation = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        setPickupLocation(currentLocation);
-        animateToLocation(currentLocation);
-        fetchAddress(currentLocation);
+        const { latitude, longitude } = position.coords;
+        setCurrentLocation({
+          latitude,
+          longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
       },
-      error => console.log('Error getting location:', error),
+      error => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
   };
@@ -163,12 +165,7 @@ const Dashboard = () => {
       <MapView
         ref={mapRef}
         style={StyleSheet.absoluteFillObject}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        initialRegion={currentLocation}
       >
         {pickupLocation && <Marker coordinate={pickupLocation} title="Pickup Location" />}
         {destination && <Marker coordinate={destination} title="Destination Location" />}
@@ -186,6 +183,7 @@ const Dashboard = () => {
           styles={{
             textInputContainer: styles.textInputContainer,
             textInput: styles.locationInput,
+            placeholderTextColor: 'black',
           }}
         />
         <GooglePlacesAutocomplete
@@ -199,6 +197,7 @@ const Dashboard = () => {
           styles={{
             textInputContainer: styles.textInputContainer,
             textInput: styles.locationInput,
+            placeholderTextColor: 'black',
           }}
         />
       </View>
@@ -220,23 +219,25 @@ const Dashboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    color: "black",
   },
   inputContainer: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 40 : 20,
     width: '100%',
     zIndex: 5,
+    color: "black",
   },
   textInputContainer: {
-    backgroundColor: 'rgba(255,255,255,0.9)',
     borderRadius: 5,
     marginHorizontal: 10,
     marginTop: 5,
+    color: "black",
   },
   locationInput: {
     height: 44,
-    color: '#5d5d5d',
     fontSize: 18,
+    color: "black",
   },
   locateButton: {
     position: 'absolute',

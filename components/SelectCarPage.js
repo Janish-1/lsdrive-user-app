@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
   },
   changeButtonText: {
     fontSize: 16,
-    color: '#000',
+    color: 'black',
   },
   addressText: {
     fontSize: 16,
@@ -553,6 +553,8 @@ const styles = StyleSheet.create({
   },
   drawerOptionText: {
     fontSize: 20,
+    color: 'black',
+    fontWeight: 'normal',
   },
   closeButton: {
     position: 'absolute',
@@ -562,7 +564,8 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight:'bold',
+    color:'black',
   },
 });
 

@@ -147,13 +147,13 @@ const Rides = () => {
         try {
             // Retrieve user_id from AsyncStorage
             const userId = await AsyncStorage.getItem('user');
-    
+
             // Prepare the data for the API call
             const requestData = {
                 status: 3,
                 // Add any other necessary data for the booking confirmation
             };
-    
+
             // Make the API call to confirm the booking
             const response = await fetch(`${API_URL}/api/update-from-user/${driverId}/`, {
                 method: 'PATCH',
@@ -163,7 +163,7 @@ const Rides = () => {
                 },
                 body: JSON.stringify(requestData),
             });
-    
+
             if (response.ok) {
                 // Handle successful confirmation
                 // For example, show a success message
@@ -178,7 +178,7 @@ const Rides = () => {
             // Handle any errors that occur during the API call
         }
     };
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -267,14 +267,15 @@ const Rides = () => {
                             {yourrides ? (
                                 yourrides.map((ride) => (
                                     <View key={ride.id} style={styles.rideBox}>
-                                        <Text> Your Request </Text>
-                                        <Text>ID: {ride.id}</Text>
-                                        <Text>Destination: {ride.destination_address}</Text>
-                                        <Text>Pickup Address: {ride.pickup_address}</Text>
-                                        <Text>People Count: {ride.people_count}</Text>
-                                        <Text>Pickup Time: {ride.pickup_time}</Text>
-                                        <Text>-----------------------------------------------------------</Text>
+                                        <Text style={styles.texttab}> Your Request </Text>
+                                        <Text style={styles.texttab}>ID: {ride.id}</Text>
+                                        <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
+                                        <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
+                                        <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
+                                        <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                        <View style={styles.separator}></View>
                                     </View>
+
                                 ))
                             ) : (
                                 <Text style={styles.noRidesText}>No data available</Text>
@@ -287,13 +288,13 @@ const Rides = () => {
                             {yourrides ? (
                                 yourrides.map((ride) => (
                                     <View key={ride.id} style={styles.rideBox}>
-                                        <Text> Your Request </Text>
-                                        <Text>ID: {ride.id}</Text>
-                                        <Text>Destination: {ride.destination_address}</Text>
-                                        <Text>Pickup Address: {ride.pickup_address}</Text>
-                                        <Text>People Count: {ride.people_count}</Text>
-                                        <Text>Pickup Time: {ride.pickup_time}</Text>
-                                        <Text>-----------------------------------------------------------</Text>
+                                        <Text style={styles.texttab}> Your Request </Text>
+                                        <Text style={styles.texttab}>ID: {ride.id}</Text>
+                                        <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
+                                        <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
+                                        <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
+                                        <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                        <View style={styles.separator}></View>
                                     </View>
                                 ))
                             ) : (
@@ -307,13 +308,13 @@ const Rides = () => {
                             {yourrides ? (
                                 yourrides.map((ride) => (
                                     <View key={ride.id} style={styles.rideBox}>
-                                        <Text> Your Request </Text>
-                                        <Text>ID: {ride.id}</Text>
-                                        <Text>Destination: {ride.destination_address}</Text>
-                                        <Text>Pickup Address: {ride.pickup_address}</Text>
-                                        <Text>People Count: {ride.people_count}</Text>
-                                        <Text>Pickup Time: {ride.pickup_time}</Text>
-                                        <Text>-----------------------------------------------------------</Text>
+                                        <Text style={styles.texttab}> Your Request </Text>
+                                        <Text style={styles.texttab}>ID: {ride.id}</Text>
+                                        <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
+                                        <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
+                                        <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
+                                        <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                        <View style={styles.separator}></View>
                                     </View>
                                 ))
                             ) : (
@@ -327,16 +328,16 @@ const Rides = () => {
                             {yourrides ? (
                                 yourrides.map((ride) => (
                                     <View key={ride.id} style={styles.rideBox}>
-                                        <Text> Your Request </Text>
+                                        <Text style={styles.texttab}> Your Request </Text>
                                         <TouchableOpacity style={styles.button} onPress={() => confirmbook(ride.id, ride.acpted_driver)}>
                                             <Text style={styles.buttonText}>Confirm Book</Text>
                                         </TouchableOpacity>
-                                        <Text>ID: {ride.id}</Text>
-                                        <Text>Destination: {ride.destination_address}</Text>
-                                        <Text>Pickup Address: {ride.pickup_address}</Text>
-                                        <Text>People Count: {ride.people_count}</Text>
-                                        <Text>Pickup Time: {ride.pickup_time}</Text>
-                                        <Text>-----------------------------------------------------------</Text>
+                                        <Text style={styles.texttab}>ID: {ride.id}</Text>
+                                        <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
+                                        <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
+                                        <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
+                                        <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                        <View style={styles.separator}></View>
                                     </View>
                                 ))
                             ) : (
@@ -357,6 +358,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    separator: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        marginVertical: 10,
+    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -368,7 +374,7 @@ const styles = StyleSheet.create({
     welcomeText: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: 'white',
+        color: 'black', // Change color to black
         marginLeft: 16,
     },
     imageContainer: {
@@ -397,7 +403,7 @@ const styles = StyleSheet.create({
     },
     pickupText: {
         fontSize: 16,
-        color: '#333',
+        color: 'black', // Change color to black
     },
     changeButton: {
         backgroundColor: '#9b59b6',
@@ -407,7 +413,7 @@ const styles = StyleSheet.create({
     },
     changeButtonText: {
         fontSize: 16,
-        color: '#000',
+        color: 'black', // Change color to black
     },
     addressText: {
         fontSize: 16,
@@ -429,7 +435,7 @@ const styles = StyleSheet.create({
     },
     rideTypeText: {
         fontSize: 16,
-        color: '#fff',
+        color: 'black', // Change color to black
     },
     selectedRideType: {
         backgroundColor: '#ff9800', // Change color to indicate selection
@@ -463,7 +469,10 @@ const styles = StyleSheet.create({
     },
     nextButtonText: {
         fontSize: 20,
-        color: '#fff',
+        color: 'black', // Change color to black
+    },
+    buttonText: {
+        color: 'white',
     },
     selectedCar: {
         borderColor: 'purple',
@@ -498,8 +507,9 @@ const styles = StyleSheet.create({
         marginBottom: 16, // Increase margin bottom for bigger boxes
     },
     drawerOptionText: {
-        marginLeft: 16, // Increase margin left for bigger icons
-        fontSize: 20, // Increase font size for bigger text
+        fontSize: 20,
+        color: 'black',
+        fontWeight: 'normal',
     },
     textContainer: {
         backgroundColor: '#fff',
@@ -525,7 +535,7 @@ const styles = StyleSheet.create({
     nheaderText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: 'black',
     },
     activeHeaderText: {
         color: '#9b59b6',
@@ -549,6 +559,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: 'black',
     },
     noRidesText: {
         fontSize: 16,
@@ -560,12 +571,19 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#9b59b6',
-        color: '#fff',
+        color: 'black', // Change color to black
         padding: 10,
         borderRadius: 5,
         textAlign: 'center',
         width: '45%',
     },
+    ridebox: {
+        color: 'black',
+    },
+    texttab:{
+        color:"black",
+        fontSize:14,
+    }
 });
 
 export default Rides;

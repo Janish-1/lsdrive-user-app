@@ -111,8 +111,8 @@ const RegisterPage = () => {
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
 
-      <Text>Already have an account? <TouchableOpacity onPress={Sendtologin}>
-        <Text style={styles.link}>Sign in</Text></TouchableOpacity>
+        <Text>Already have an account? <TouchableOpacity onPress={Sendtologin}>
+          <Text style={styles.link}>Sign in</Text></TouchableOpacity>
         </Text>
     </View>
   );
@@ -157,9 +157,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
+    color:"white",
   },
   textform: {
     color: 'black',
+    fontWeight: 'bold',
   },
 });
 

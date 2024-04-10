@@ -219,7 +219,7 @@ const CheckoutPage = () => {
         <TouchableOpacity onPress={handleLocationPickerPress} style={styles.changeButton}>
           <Text style={styles.changeButtonText}>Change</Text>
         </TouchableOpacity>
-        <Text>{dropLocation}</Text>
+        <Text style={styles.dateText}>{dropLocation}</Text>
       </View>
 
       <View style={styles.section}>
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#000',
+    color: 'white',
   },
   section: {
     padding: 20,
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    color: '#333',
+    color: 'black',
     marginBottom: 10,
   },
   selectButton: {
@@ -344,11 +344,11 @@ const styles = StyleSheet.create({
   },
   changeButtonText: {
     fontSize: 16,
-    color: 'black',
+    color: 'white',
   },
   dateText: {
     fontSize: 16,
-    color: '#333',
+    color: 'black',
     marginTop: 10,
   },
   scheduleButton: {
@@ -380,10 +380,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'black',
   },
   popupText: {
     fontSize: 16,
     marginBottom: 5,
+    color: 'black',
   },
   closeButton: {
     backgroundColor: '#9b59b6',
@@ -403,6 +405,10 @@ const styles = StyleSheet.create({
   datePicker: {
     backgroundColor: 'white',
   },
+  input: {
+    color: 'black',
+    fontWeight: 'bold',
+  }
 });
 
 export default CheckoutPage;
