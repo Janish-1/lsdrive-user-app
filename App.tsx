@@ -6,9 +6,6 @@
  */
 
 import React from 'react';
-import {
-  StyleSheet,
-} from 'react-native';
 
 import HomePage from './components/HomePage';
 import { NavigationContainer } from '@react-navigation/native';
@@ -21,6 +18,10 @@ import Reset from './components/ResetPassword';
 import SelectCarPage from './components/SelectCarPage';
 import CheckoutPage from './components/CheckoutPage';
 import Rides from './components/Rides';
+import Farechart from './components/Farechart';
+import Faq from './components/Faq';
+import Helpandsupport from './components/Helpandsupport';
+import Shareapp from './components/Shareapp';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,34 +38,13 @@ function App(): React.JSX.Element {
         <Stack.Screen name="SelectCarPage" component={SelectCarPage} />
         <Stack.Screen name="CheckoutPage" component={CheckoutPage} />
         <Stack.Screen name="Rides" component={Rides} />
+        <Stack.Screen name="Farechart" component={Farechart} />
+        <Stack.Screen name="Faq" component={Faq} />
+        <Stack.Screen name="Helpandsupport" component={Helpandsupport} />
+        <Stack.Screen name="Shareapp" component={Shareapp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions, DrawerLayoutAndroid } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../assets/icons/home-1-svgrepo-com.svg';
@@ -12,18 +12,11 @@ import Share from '../assets/icons/share-svgrepo-com.svg';
 import { API_URL } from '@env';
 
 
-const Rides = () => {
+const Farechart = () => {
     const navigation = useNavigation();
     const [userData, setUserData] = useState(null);
     const [username, setusername] = useState('');
     const [profileimage, setprofileimage] = useState('');
-    const [rideData, setRideData] = useState();
-    const [showPastRides, setShowPastRides] = useState(false);
-    const [showActiveRides, setShowActiveRides] = useState(false);
-    const [showCurrentRides, setShowCurrentRides] = useState(true);
-    const [yourrides, setyourrides] = useState([]);
-    const [showDriverAcceptedRides, setshowDriverAcceptedRides] = useState(false);
-
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
@@ -103,102 +96,13 @@ const Rides = () => {
         }
     };
 
-    const confirmbook = async (rideId, driverId) => {
-        try {
-            // Retrieve user_id from AsyncStorage
-            const userId = await AsyncStorage.getItem('user');
-
-            // Prepare the data for the API call
-            const requestData = {
-                status: 3,
-                // Add any other necessary data for the booking confirmation
-            };
-
-            // Make the API call to confirm the booking
-            const response = await fetch(`${API_URL}/api/update-from-user/${driverId}/`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any other necessary headers
-                },
-                body: JSON.stringify(requestData),
-            });
-
-            if (response.ok) {
-                // Handle successful confirmation
-                // For example, show a success message
-                alert('Booking confirmed successfully!');
-            } else {
-                // Handle error response from the API
-                // For example, show an error message
-                alert('Failed to confirm booking. Please try again later.');
-            }
-        } catch (error) {
-            console.error('Error confirming booking:', error);
-            // Handle any errors that occur during the API call
-        }
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const value = await AsyncStorage.getItem('user');
-
-                if (showPastRides) {
-                    // Fetch past rides data
-                    const response = await fetch(`${API_URL}/api/get-ended-rides/${value}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    setyourrides(data);
-                } else if (showActiveRides) {
-                    // Fetch active rides data
-                    const response = await fetch(`${API_URL}/api/get-active-rides/${value}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    setyourrides(data);
-                } else if (showCurrentRides) {
-                    // Fetch current rides data
-                    const response = await fetch(`${API_URL}/api/get-current-rides/${value}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    setyourrides(data);
-                } else if (showDriverAcceptedRides) {
-                    // Fetch current rides data
-                    const response = await fetch(`${API_URL}/api/get-driveraccepted-rides/${value}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    setyourrides(data);
-                }
-            } catch (error) {
-                console.error('Error fetching rides:', error);
-            }
-        };
-
-        // Initial fetch
-        fetchData();
-
-        // Set up interval to fetch data every 3 seconds
-        const intervalId = setInterval(fetchData, 3000);
-
-        // Clean up interval on component unmount
-        return () => clearInterval(intervalId);
-    }, [showPastRides, showActiveRides, showCurrentRides, showDriverAcceptedRides]);
-
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.drawerButton} onPress={toggleDrawer}>
                     <Menu width="24" height="24" />
                 </TouchableOpacity>
-                <Text style={styles.welcomeText}> Rides </Text>
+                <Text style={styles.welcomeText}> Fare Chart </Text>
             </View>
             {isDrawerOpen && (
                 <View style={styles.drawerContent}>
@@ -260,105 +164,28 @@ const Rides = () => {
                     </TouchableOpacity>
                 </View>
             )}
-            <View style={styles.nheader}>
-                <TouchableOpacity onPress={() => { setShowPastRides(true); setShowActiveRides(false); setShowCurrentRides(false); setshowDriverAcceptedRides(false); }}>
-                    <Text style={[styles.nheaderText, showPastRides && styles.activeHeaderText]}>Past</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { setShowPastRides(false); setShowActiveRides(true); setShowCurrentRides(false); setshowDriverAcceptedRides(false); }}>
-                    <Text style={[styles.nheaderText, showActiveRides && styles.activeHeaderText]}>Active</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { setShowPastRides(false); setShowActiveRides(false); setShowCurrentRides(true); setshowDriverAcceptedRides(false); }}>
-                    <Text style={[styles.nheaderText, showCurrentRides && styles.activeHeaderText]}>Current</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { setShowPastRides(false); setShowActiveRides(false); setShowCurrentRides(false); setshowDriverAcceptedRides(true); }}>
-                    <Text style={[styles.nheaderText, showDriverAcceptedRides && styles.activeHeaderText]}>Accepted</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.shadowBox}>
-                {showPastRides && (
-                    <>
-                        <Text style={styles.rideTitle}>Past Rides</Text>
-                        {yourrides ? (
-                            yourrides.map((ride) => (
-                                <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
-                                    <View style={styles.separator}></View>
-                                </View>
-
-                            ))
-                        ) : (
-                            <Text style={styles.noRidesText}>No data available</Text>
-                        )}
-                    </>
-                )}
-                {showActiveRides && (
-                    <>
-                        <Text style={styles.rideTitle}>Active Rides</Text>
-                        {yourrides ? (
-                            yourrides.map((ride) => (
-                                <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
-                                    <View style={styles.separator}></View>
-                                </View>
-                            ))
-                        ) : (
-                            <Text style={styles.noRidesText}>No data available</Text>
-                        )}
-                    </>
-                )}
-                {showCurrentRides && (
-                    <>
-                        <Text style={styles.rideTitle}>Current Rides</Text>
-                        {yourrides ? (
-                            yourrides.map((ride) => (
-                                <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
-                                    <View style={styles.separator}></View>
-                                </View>
-                            ))
-                        ) : (
-                            <Text style={styles.noRidesText}>No data available</Text>
-                        )}
-                    </>
-                )}
-                {showDriverAcceptedRides && (
-                    <>
-                        <Text style={styles.rideTitle}>Accepted Rides</Text>
-                        {yourrides ? (
-                            yourrides.map((ride) => (
-                                <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
-                                    <TouchableOpacity style={styles.button} onPress={() => confirmbook(ride.id, ride.acpted_driver)}>
-                                        <Text style={styles.buttonText}>Confirm Book</Text>
-                                    </TouchableOpacity>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
-                                    <View style={styles.separator}></View>
-                                </View>
-                            ))
-                        ) : (
-                            <Text style={styles.noRidesText}>No data available</Text>
-                        )}
-                    </>
-                )}
+            <View style={styles.chartContainer}>
+                <Text style={styles.chartTitle}>Fare Chart (Rupees)</Text>
+                <View style={styles.chartRow}>
+                    <Text style={styles.chartItem}>Distance (km)</Text>
+                    <Text style={styles.chartItem}>Cost (INR)</Text>
+                </View>
+                <View style={styles.chartRow}>
+                    <Text style={styles.chartItem}>0-5</Text>
+                    <Text style={styles.chartItem}>₹50</Text>
+                </View>
+                <View style={styles.chartRow}>
+                    <Text style={styles.chartItem}>5-10</Text>
+                    <Text style={styles.chartItem}>₹80</Text>
+                </View>
+                <View style={styles.chartRow}>
+                    <Text style={styles.chartItem}>10-15</Text>
+                    <Text style={styles.chartItem}>₹100</Text>
+                </View>
+                <View style={styles.chartRow}>
+                    <Text style={styles.chartItem}>15-20</Text>
+                    <Text style={styles.chartItem}>₹120</Text>
+                </View>
             </View>
         </View>
     );
@@ -620,7 +447,27 @@ const styles = StyleSheet.create({
     texttab: {
         color: "black",
         fontSize: 14,
-    }
+    },
+    chartContainer: {
+        flex: 1,
+        padding: 16,
+    },
+    chartTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        color: 'black',
+    },
+    chartRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+    },
+    chartItem: {
+        flex: 1,
+        fontSize: 16,
+        color: 'black',
+    },
 });
 
-export default Rides;
+export default Farechart;

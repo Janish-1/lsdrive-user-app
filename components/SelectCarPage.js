@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -7,7 +7,6 @@ import {
   ScrollView,
   Image,
   Dimensions,
-  DrawerLayoutAndroid,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,12 +15,8 @@ import FAQ from '../assets/icons/faq-svgrepo-com.svg';
 import Help from '../assets/icons/help-svgrepo-com.svg';
 import Transit from '../assets/icons/calgary-transit-my-fare-svgrepo-com.svg';
 import Car from '../assets/icons/car-side-svgrepo-com.svg';
-import Refer from '../assets/icons/refer-to-svgrepo-com.svg';
 import Menu from '../assets/icons/menu-svgrepo-com.svg';
 import Share from '../assets/icons/share-svgrepo-com.svg';
-import Wallet from '../assets/icons/wallet-svgrepo-com.svg';
-import About from '../assets/icons/about-svgrepo-com.svg';
-import Man from '../assets/icons/man-svgrepo-com.svg';
 import {API_URL} from '@env';
 
 const SelectCarPage = () => {
@@ -194,14 +189,14 @@ const SelectCarPage = () => {
         <TouchableOpacity style={styles.drawerButton} onPress={toggleDrawer}>
           <Menu width="24" height="24" />
         </TouchableOpacity>
-        <Text style={styles.welcomeText}> Welcome {username}</Text>
+        <Text style={styles.welcomeText}> Home Page </Text>
       </View>
       {isDrawerOpen && (
         <View style={styles.drawerContent}>
           <TouchableOpacity
-            style={styles.closeButton}
+            style={styles.drawerOption}
             onPress={() => setIsDrawerOpen(false)}>
-            <Text style={styles.closeButtonText}>X</Text>
+            <Text style={styles.drawerOptionText}>Close</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerOption}
@@ -221,7 +216,7 @@ const SelectCarPage = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerOption}
-            onPress={() => console.log('Fare Chart pressed')}>
+            onPress={() => RedirectPage('Farechart')}>
             <Text>
               <Transit width="24" height="24" />
               <Text style={styles.drawerOptionText}>Fare Chart</Text>
@@ -229,7 +224,7 @@ const SelectCarPage = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerOption}
-            onPress={() => console.log('FAQ pressed')}>
+            onPress={() => RedirectPage('Faq')}>
             <Text>
               <FAQ width="24" height="24" />
               <Text style={styles.drawerOptionText}>FAQ</Text>
@@ -237,7 +232,7 @@ const SelectCarPage = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerOption}
-            onPress={() => console.log('Help and Support pressed')}>
+            onPress={() => RedirectPage('Helpandsupport')}>
             <Text>
               <Help width="24" height="24" />
               <Text style={styles.drawerOptionText}>Help and Support</Text>
@@ -245,7 +240,7 @@ const SelectCarPage = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerOption}
-            onPress={() => console.log('Share App pressed')}>
+            onPress={() => RedirectPage('Shareapp')}>
             <Text>
               <Share width="24" height="24" />
               <Text style={styles.drawerOptionText}>Share App</Text>
@@ -561,11 +556,12 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     padding: 10,
+    backgroundColor: 'black',
   },
   closeButtonText: {
     fontSize: 20,
     fontWeight:'bold',
-    color:'black',
+    color:'white',
   },
 });
 

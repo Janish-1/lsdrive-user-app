@@ -6,7 +6,6 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { useNavigation } from '@react-navigation/native';
 import Location from '../assets/icons/location-svgrepo-com.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '@env';
 
 const Dashboard = () => {
   const mapRef = useRef(null);
@@ -138,28 +137,6 @@ const Dashboard = () => {
     }
   };
 
-  const fetchAddress = async (location) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_API_KEY}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.results && data.results.length > 0) {
-        const address = data.results[0].formatted_address;
-        Alert.alert('Current Location', address);
-        setPickupLocation(address);
-      }
-    } catch (error) {
-      console.error('Error fetching address:', error);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <MapView
@@ -175,29 +152,27 @@ const Dashboard = () => {
         <GooglePlacesAutocomplete
           placeholder='Enter pickup location'
           onPress={(data, details = null) => onPickupSelected(details)}
+          textInputProps={{placeholderTextColor:'#000000'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,
             language: 'en',
           }}
           styles={{
-            textInputContainer: styles.textInputContainer,
-            textInput: styles.locationInput,
-            placeholderTextColor: 'black',
+            description : {color : 'black'}
           }}
         />
         <GooglePlacesAutocomplete
           placeholder='Enter destination location'
           onPress={(data, details = null) => onDestinationSelected(details)}
+          textInputProps={{placeholderTextColor:'#000000'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,
             language: 'en',
           }}
           styles={{
-            textInputContainer: styles.textInputContainer,
-            textInput: styles.locationInput,
-            placeholderTextColor: 'black',
+            description : {color : 'black'}
           }}
         />
       </View>
