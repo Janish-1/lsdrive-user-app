@@ -6,6 +6,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { useNavigation } from '@react-navigation/native';
 import Location from '../assets/icons/location-svgrepo-com.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useColorScheme } from 'react-native';
 
 const Dashboard = () => {
   const mapRef = useRef(null);
@@ -20,7 +21,7 @@ const Dashboard = () => {
     destination_longitude: null,
     destination_address: null,
   });
-
+  const colorScheme = useColorScheme();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -152,7 +153,7 @@ const Dashboard = () => {
         <GooglePlacesAutocomplete
           placeholder='Enter pickup location'
           onPress={(data, details = null) => onPickupSelected(details)}
-          textInputProps={{placeholderTextColor:'#000000'}}
+          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'white' : 'black'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,
@@ -165,7 +166,7 @@ const Dashboard = () => {
         <GooglePlacesAutocomplete
           placeholder='Enter destination location'
           onPress={(data, details = null) => onDestinationSelected(details)}
-          textInputProps={{placeholderTextColor:'#000000'}}
+          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'white' : 'black'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,

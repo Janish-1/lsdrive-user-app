@@ -1,13 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../assets/icons/home-1-svgrepo-com.svg';
@@ -17,6 +9,7 @@ import Transit from '../assets/icons/calgary-transit-my-fare-svgrepo-com.svg';
 import Car from '../assets/icons/car-side-svgrepo-com.svg';
 import Menu from '../assets/icons/menu-svgrepo-com.svg';
 import Share from '../assets/icons/share-svgrepo-com.svg';
+import { useColorScheme } from 'react-native';
 import {API_URL} from '@env';
 
 const SelectCarPage = () => {
@@ -24,12 +17,12 @@ const SelectCarPage = () => {
   const [userData, setUserData] = useState(null);
   const [username, setusername] = useState('');
   const [profileimage, setprofileimage] = useState('');
+  const colorScheme = useColorScheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [rideData, setRideData] = useState({
     rideType: 'IN-CITY', // Default value for rideType
     selectedCar: null, // Default value for selectedCar
   });
-
   useEffect(() => {
     // Load saved ride data from AsyncStorage when the component mounts
     loadRideData();
@@ -189,21 +182,21 @@ const SelectCarPage = () => {
         <TouchableOpacity style={styles.drawerButton} onPress={toggleDrawer}>
           <Menu width="24" height="24" />
         </TouchableOpacity>
-        <Text style={styles.welcomeText}> Home Page </Text>
+        <Text style={[styles.welcomeText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}> Home Page </Text>
       </View>
       {isDrawerOpen && (
         <View style={styles.drawerContent}>
           <TouchableOpacity
             style={styles.drawerOption}
             onPress={() => setIsDrawerOpen(false)}>
-            <Text style={styles.drawerOptionText}>Close</Text>
+            <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Close</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.drawerOption}
             onPress={() => RedirectPage('SelectCarPage')}>
             <Text>
               <Home width="24" height="24" />
-              <Text style={styles.drawerOptionText}>Home</Text>
+              <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Home</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -211,7 +204,7 @@ const SelectCarPage = () => {
             onPress={() => RedirectPage('Rides')}>
             <Text>
               <Car width="24" height="24" />
-              <Text style={styles.drawerOptionText}>Rides</Text>
+              <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Rides</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -219,7 +212,7 @@ const SelectCarPage = () => {
             onPress={() => RedirectPage('Farechart')}>
             <Text>
               <Transit width="24" height="24" />
-              <Text style={styles.drawerOptionText}>Fare Chart</Text>
+              <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Fare Chart</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -227,7 +220,7 @@ const SelectCarPage = () => {
             onPress={() => RedirectPage('Faq')}>
             <Text>
               <FAQ width="24" height="24" />
-              <Text style={styles.drawerOptionText}>FAQ</Text>
+              <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>FAQ</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -235,7 +228,7 @@ const SelectCarPage = () => {
             onPress={() => RedirectPage('Helpandsupport')}>
             <Text>
               <Help width="24" height="24" />
-              <Text style={styles.drawerOptionText}>Help and Support</Text>
+              <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Help and Support</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -243,11 +236,11 @@ const SelectCarPage = () => {
             onPress={() => RedirectPage('Shareapp')}>
             <Text>
               <Share width="24" height="24" />
-              <Text style={styles.drawerOptionText}>Share App</Text>
+              <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Share App</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.drawerOption} onPress={Logout}>
-            <Text style={styles.drawerOptionText}>Logout</Text>
+            <Text style={[styles.drawerOptionText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Logout</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -262,17 +255,18 @@ const SelectCarPage = () => {
 
       <View contentContainerStyle={styles.contentContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.pickupText}>
+          <Text style={[styles.pickupText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>
             Please Select Your Pickup Address
           </Text>
           <TouchableOpacity
             style={styles.changeButton}
             onPress={LocationButtonClick}>
-            <Text style={styles.changeButtonText}>Change</Text>
+            <Text style={[styles.changeButtonText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Change</Text>
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.carSelectionContainer}>
+        <Text style={[styles.pickupText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Please Select the Ride Type and Ride</Text>
         <View style={styles.rideTypeContainer}>
           <TouchableOpacity
             style={[
@@ -280,7 +274,7 @@ const SelectCarPage = () => {
               rideType === 'IN-CITY' && styles.selectedRideType,
             ]}
             onPress={() => handleRideTypeChange('IN-CITY')}>
-            <Text style={styles.rideTypeText}>IN-CITY</Text>
+            <Text style={[styles.rideTypeText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>IN-CITY</Text>
             {rideType === 'IN-CITY' && <View style={styles.indicator} />}
           </TouchableOpacity>
           <TouchableOpacity
@@ -289,7 +283,7 @@ const SelectCarPage = () => {
               rideType === 'OUTSTATION' && styles.selectedRideType,
             ]}
             onPress={() => handleRideTypeChange('OUTSTATION')}>
-            <Text style={styles.rideTypeText}>OUTSTATION</Text>
+            <Text style={[styles.rideTypeText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>OUTSTATION</Text>
             {rideType === 'OUTSTATION' && <View style={styles.indicator} />}
           </TouchableOpacity>
         </View>
@@ -310,7 +304,7 @@ const SelectCarPage = () => {
         </ScrollView>
 
         <TouchableOpacity style={styles.nextButton}>
-          <Text style={styles.nextButtonText} onPress={NextButtonClick}>
+          <Text style={[styles.nextButtonText, { color: colorScheme === 'dark' ? 'white' : 'black' }]} onPress={NextButtonClick}>
             NEXT
           </Text>
         </TouchableOpacity>

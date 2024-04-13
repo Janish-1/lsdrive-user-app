@@ -10,6 +10,7 @@ import Car from '../assets/icons/car-side-svgrepo-com.svg';
 import Menu from '../assets/icons/menu-svgrepo-com.svg';
 import Share from '../assets/icons/share-svgrepo-com.svg';
 import { API_URL } from '@env';
+import { useColorScheme } from 'react-native';
 
 
 const Rides = () => {
@@ -23,7 +24,7 @@ const Rides = () => {
     const [showCurrentRides, setShowCurrentRides] = useState(true);
     const [yourrides, setyourrides] = useState([]);
     const [showDriverAcceptedRides, setshowDriverAcceptedRides] = useState(false);
-
+    const colorScheme = useColorScheme();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
@@ -198,21 +199,21 @@ const Rides = () => {
                 <TouchableOpacity style={styles.drawerButton} onPress={toggleDrawer}>
                     <Menu width="24" height="24" />
                 </TouchableOpacity>
-                <Text style={styles.welcomeText}> Rides </Text>
+                <Text style={[styles.welcomeText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}> Rides </Text>
             </View>
             {isDrawerOpen && (
                 <View style={styles.drawerContent}>
                     <TouchableOpacity
                         style={styles.drawerOption}
                         onPress={() => setIsDrawerOpen(false)}>
-                        <Text style={styles.drawerOptionText}>Close</Text>
+                        <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Close</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.drawerOption}
                         onPress={() => RedirectPage('SelectCarPage')}>
                         <Text>
                             <Home width="24" height="24" />
-                            <Text style={styles.drawerOptionText}>Home</Text>
+                            <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Home</Text>
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -220,7 +221,7 @@ const Rides = () => {
                         onPress={() => RedirectPage('Rides')}>
                         <Text>
                             <Car width="24" height="24" />
-                            <Text style={styles.drawerOptionText}>Rides</Text>
+                            <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Rides</Text>
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -228,7 +229,7 @@ const Rides = () => {
                         onPress={() => RedirectPage('Farechart')}>
                         <Text>
                             <Transit width="24" height="24" />
-                            <Text style={styles.drawerOptionText}>Fare Chart</Text>
+                            <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Fare Chart</Text>
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -236,7 +237,7 @@ const Rides = () => {
                         onPress={() => RedirectPage('Faq')}>
                         <Text>
                             <FAQ width="24" height="24" />
-                            <Text style={styles.drawerOptionText}>FAQ</Text>
+                            <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>FAQ</Text>
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -244,7 +245,7 @@ const Rides = () => {
                         onPress={() => RedirectPage('Helpandsupport')}>
                         <Text>
                             <Help width="24" height="24" />
-                            <Text style={styles.drawerOptionText}>Help and Support</Text>
+                            <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Help and Support</Text>
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -252,23 +253,23 @@ const Rides = () => {
                         onPress={() => RedirectPage('Shareapp')}>
                         <Text>
                             <Share width="24" height="24" />
-                            <Text style={styles.drawerOptionText}>Share App</Text>
+                            <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Share App</Text>
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.drawerOption} onPress={Logout}>
-                        <Text style={styles.drawerOptionText}>Logout</Text>
+                        <Text style={[styles.drawerOptionText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Logout</Text>
                     </TouchableOpacity>
                 </View>
             )}
             <View style={styles.nheader}>
                 <TouchableOpacity onPress={() => { setShowPastRides(true); setShowActiveRides(false); setShowCurrentRides(false); setshowDriverAcceptedRides(false); }}>
-                    <Text style={[styles.nheaderText, showPastRides && styles.activeHeaderText]}>Past</Text>
+                    <Text style={[styles.nheaderText, showPastRides && styles.activeHeaderText]}>Ended</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { setShowPastRides(false); setShowActiveRides(true); setShowCurrentRides(false); setshowDriverAcceptedRides(false); }}>
                     <Text style={[styles.nheaderText, showActiveRides && styles.activeHeaderText]}>Active</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { setShowPastRides(false); setShowActiveRides(false); setShowCurrentRides(true); setshowDriverAcceptedRides(false); }}>
-                    <Text style={[styles.nheaderText, showCurrentRides && styles.activeHeaderText]}>Current</Text>
+                    <Text style={[styles.nheaderText, showCurrentRides && styles.activeHeaderText]}>Requested</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { setShowPastRides(false); setShowActiveRides(false); setShowCurrentRides(false); setshowDriverAcceptedRides(true); }}>
                     <Text style={[styles.nheaderText, showDriverAcceptedRides && styles.activeHeaderText]}>Accepted</Text>
@@ -277,16 +278,13 @@ const Rides = () => {
             <View style={styles.shadowBox}>
                 {showPastRides && (
                     <>
-                        <Text style={styles.rideTitle}>Past Rides</Text>
+                        <Text style={styles.rideTitle}>Ended Rides</Text>
                         {yourrides ? (
                             yourrides.map((ride) => (
                                 <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Destination: {ride.destination_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Pickup Address: {ride.pickup_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>People Count: {ride.people_count}</Text>
                                     <View style={styles.separator}></View>
                                 </View>
 
@@ -302,12 +300,9 @@ const Rides = () => {
                         {yourrides ? (
                             yourrides.map((ride) => (
                                 <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Destination: {ride.destination_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Pickup Address: {ride.pickup_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>People Count: {ride.people_count}</Text>
                                     <View style={styles.separator}></View>
                                 </View>
                             ))
@@ -318,16 +313,13 @@ const Rides = () => {
                 )}
                 {showCurrentRides && (
                     <>
-                        <Text style={styles.rideTitle}>Current Rides</Text>
+                        <Text style={styles.rideTitle}>Requested Rides</Text>
                         {yourrides ? (
                             yourrides.map((ride) => (
                                 <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Destination: {ride.destination_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Pickup Address: {ride.pickup_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>People Count: {ride.people_count}</Text>
                                     <View style={styles.separator}></View>
                                 </View>
                             ))
@@ -342,20 +334,17 @@ const Rides = () => {
                         {yourrides ? (
                             yourrides.map((ride) => (
                                 <View key={ride.id} style={styles.rideBox}>
-                                    <Text style={styles.texttab}> Your Request </Text>
                                     <TouchableOpacity style={styles.button} onPress={() => confirmbook(ride.id, ride.acpted_driver)}>
                                         <Text style={styles.buttonText}>Confirm Book</Text>
                                     </TouchableOpacity>
-                                    <Text style={styles.texttab}>ID: {ride.id}</Text>
-                                    <Text style={styles.texttab}>Destination: {ride.destination_address}</Text>
-                                    <Text style={styles.texttab}>Pickup Address: {ride.pickup_address}</Text>
-                                    <Text style={styles.texttab}>People Count: {ride.people_count}</Text>
-                                    <Text style={styles.texttab}>Pickup Time: {ride.pickup_time}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Destination: {ride.destination_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Pickup Address: {ride.pickup_address}</Text>
+                                    <Text style={[styles.texttab, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>People Count: {ride.people_count}</Text>
                                     <View style={styles.separator}></View>
                                 </View>
                             ))
                         ) : (
-                            <Text style={styles.noRidesText}>No data available</Text>
+                            <Text style={[styles.noRidesText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>No data available</Text>
                         )}
                     </>
                 )}

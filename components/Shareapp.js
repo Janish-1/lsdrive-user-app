@@ -71,7 +71,7 @@ const Shareapp = () => {
         try {
             const result = await RNShare.share({
                 message: 'Check out this awesome app!',
-                url: 'https://yourappstorelink.com',
+                url: 'https://play.google.com/store/apps/details?id=com.lsdriveuserapp',
                 title: 'Share App',
             });
 

@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Platform,
-  Alert,
-} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput, Platform, Alert, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Back from '../assets/icons/go-back-svgrepo-com.svg';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL} from '@env';
+import { API_URL } from '@env';
+import { useColorScheme } from 'react-native';
 
 const CheckoutPage = () => {
   const navigation = useNavigation();
@@ -24,6 +16,7 @@ const CheckoutPage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDateType, setSelectedDateType] = useState('pickup');
+  const colorScheme = useColorScheme();
   const [rideData, setRideData] = useState({
     passengers: null,
     pickupDateTime: null,
@@ -63,7 +56,7 @@ const CheckoutPage = () => {
       console.error('Error loading ride data:', error);
     }
   };
-  
+
   const getAllDataInStorage = async () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
@@ -194,91 +187,85 @@ const CheckoutPage = () => {
     handleClosePopup();
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-          <Back width="24" height="24" />
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+            <Back width="24" height="24" />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Check out</Text>
+        </View>
+
+
+        <View style={styles.section}>
+          <Text style={[styles.label, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Passengers</Text>
+          <TextInput
+            style={[styles.input, {color: colorScheme === 'dark' ? 'white' : 'black'}]}
+            keyboardType="numeric"
+            placeholder="Enter number of passengers"
+            value={passengers}
+            onChangeText={(text) => setPassengers(text)}
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={[styles.label, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Drop Location</Text>
+          <TouchableOpacity onPress={handleLocationPickerPress} style={styles.changeButton}>
+            <Text style={[styles.changeButtonText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Change</Text>
+          </TouchableOpacity>
+          <Text style={styles.dateText}>{dropLocation}</Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={[styles.label, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Pickup Date & Time</Text>
+          <TouchableOpacity style={styles.changeButton} onPress={() => showDatepicker('pickup')}>
+            <Text style={[styles.changeButtonText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Change</Text>
+          </TouchableOpacity>
+          <Text style={[styles.dateText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>{pickupDate.toLocaleString()}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleRide}>
+          <Text style={[styles.scheduleButtonText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>SCHEDULE RIDE</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Check out</Text>
-      </View>
 
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Passengers</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          placeholder="Enter number of passengers"
-          value={passengers}
-          onChangeText={(text) => setPassengers(text)}
-        />
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Drop Location</Text>
-        <TouchableOpacity onPress={handleLocationPickerPress} style={styles.changeButton}>
-          <Text style={styles.changeButtonText}>Change</Text>
-        </TouchableOpacity>
-        <Text style={styles.dateText}>{dropLocation}</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Pickup Date & Time</Text>
-        <TouchableOpacity style={styles.changeButton} onPress={() => showDatepicker('pickup')}>
-          <Text style={styles.changeButtonText}>Change</Text>
-        </TouchableOpacity>
-        <Text style={styles.dateText}>{pickupDate.toLocaleString()}</Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Drop Date & Time</Text>
-        <Text style={styles.dateText}>{dropDate.toLocaleString()}</Text>
-      </View>
-
-      <TouchableOpacity style={styles.scheduleButton} onPress={handleScheduleRide}>
-        <Text style={styles.scheduleButtonText}>SCHEDULE RIDE</Text>
-      </TouchableOpacity>
-
-      {/* Checkout Popup */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showPopup}
-        onRequestClose={handleClosePopup}
-      >
-        <View style={styles.popupContainer}>
-          <View style={styles.popup}>
-            <Text style={styles.popupTitle}>Ride Details</Text>
-            <Text style={styles.popupText}>Pickup Date & Time: {pickupDate ? pickupDate.toLocaleString() : 'No Data'}</Text>
-            <Text style={styles.popupText}>Drop Date & Time: {dropDate ? dropDate.toLocaleString() : 'No Data'}</Text>
-            <Text style={styles.popupText}>Drop Location: {dropLocation ? dropLocation : 'No Data'}</Text>
-            <Text style={styles.popupText}>Passengers: {rideData.passengers ? rideData.passengers : 'No Data'}</Text>
-            <Text style={styles.popupText}>Pickup Date & Time: {rideData.pickupDateTime ? rideData.pickupDateTime : 'No Data'}</Text>
-            <Text style={styles.popupText}>Drop Date & Time: {rideData.dropDateTime ? rideData.dropDateTime : 'No Data'}</Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.closeButton} onPress={handleCheckout}>
-                <Text style={styles.checkoutText}>Checkout</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.closeButton} onPress={handleClosePopup}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
+        {/* Checkout Popup */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showPopup}
+          onRequestClose={handleClosePopup}
+        >
+          <View style={styles.popupContainer}>
+            <View style={styles.popup}>
+              <Text style={[styles.popupTitle, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Ride Details</Text>
+              <Text style={[styles.popupText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Pickup Date & Time: {pickupDate ? pickupDate.toLocaleString() : 'No Data'}</Text>
+              <Text style={[styles.popupText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Drop Location: {dropLocation ? dropLocation : 'No Data'}</Text>
+              <Text style={[styles.popupText, {color: colorScheme === 'dark' ? 'white' : 'black'}]}>Passengers: {rideData.passengers ? rideData.passengers : 'No Data'}</Text>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.closeButton} onPress={handleCheckout}>
+                  <Text style={styles.checkoutText}>Checkout</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.closeButton} onPress={handleClosePopup}>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Date Picker */}
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDateType === 'pickup' ? pickupDate : dropDate}
-          mode="datetime"
-          is24Hour={false}
-          display="default"
-          onChange={handleDateChange}
-          minimumDate={new Date()} // Restrict to current date and future dates
-        />
-      )}
-    </View>
+        {/* Date Picker */}
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDateType === 'pickup' ? pickupDate : dropDate}
+            mode="datetime"
+            is24Hour={false}
+            display="default"
+            onChange={handleDateChange}
+            minimumDate={new Date()} // Restrict to current date and future dates
+          />
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
