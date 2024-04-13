@@ -153,7 +153,7 @@ const Dashboard = () => {
         <GooglePlacesAutocomplete
           placeholder='Enter pickup location'
           onPress={(data, details = null) => onPickupSelected(details)}
-          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'white' : 'black'}}
+          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'black' : 'black'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,
@@ -166,7 +166,7 @@ const Dashboard = () => {
         <GooglePlacesAutocomplete
           placeholder='Enter destination location'
           onPress={(data, details = null) => onDestinationSelected(details)}
-          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'white' : 'black'}}
+          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'black' : 'black'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,

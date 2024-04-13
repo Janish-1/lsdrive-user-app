@@ -93,13 +93,13 @@ const RegisterPage = () => {
   return (
     <KeyboardAwareScrollView>
       <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]}>
-        <Text style={[styles.title, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Create Profile</Text>
+        <Text style={[styles.title, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Create Profile</Text>
 
         <View style={styles.formGroup}>
           <Text style={styles.textform}>Username:</Text>
           <TextInput
             placeholder="Enter your User Name"
-            placeholderTextColor={colorScheme === 'dark' ? 'white' : 'black'}
+            placeholderTextColor={colorScheme === 'dark' ? 'black' : 'black'}
             style={styles.input}
             value={username}
             onChangeText={text => setUsername(text)}
@@ -110,7 +110,7 @@ const RegisterPage = () => {
           <Text style={styles.textform}>Fullname:</Text>
           <TextInput
             placeholder="Enter your full name"
-            placeholderTextColor={colorScheme === 'dark' ? 'white' : 'black'}
+            placeholderTextColor={colorScheme === 'dark' ? 'black' : 'black'}
             style={styles.input}
             value={fullname}
             onChangeText={text => setFullname(text)}
@@ -121,7 +121,7 @@ const RegisterPage = () => {
           <Text style={styles.textform}>Phone Number:</Text>
           <TextInput
             placeholder='Enter your Phone Number'
-            placeholderTextColor={colorScheme === 'dark' ? 'white' : 'black'}
+            placeholderTextColor={colorScheme === 'dark' ? 'black' : 'black'}
             style={styles.input}
             value={phone}
             onChangeText={text => setPhone(text)}
@@ -132,7 +132,7 @@ const RegisterPage = () => {
           <Text style={styles.textform}>Email:</Text>
           <TextInput
             placeholder='Enter your email Id'
-            placeholderTextColor={colorScheme === 'dark' ? 'white' : 'black'}
+            placeholderTextColor={colorScheme === 'dark' ? 'black' : 'black'}
             style={styles.input}
             value={email}
             onChangeText={text => setEmail(text)}
@@ -143,7 +143,7 @@ const RegisterPage = () => {
           <Text style={styles.textform}>Password:</Text>
           <TextInput
             placeholder='Enter your Password'
-            placeholderTextColor={colorScheme === 'dark' ? 'white' : 'black'}
+            placeholderTextColor={colorScheme === 'dark' ? 'black' : 'black'}
             style={styles.input}
             value={password}
             onChangeText={text => setPassword(text)}
@@ -152,7 +152,7 @@ const RegisterPage = () => {
         </View>
 
         <TouchableOpacity style={[styles.button, { backgroundColor: colorScheme === 'dark' ? '#4b4b4b' : '#9b59b6' }]} onPress={registrationSuccess}>
-          <Text style={[styles.buttonText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Submit</Text>
+          <Text style={[styles.buttonText, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Submit</Text>
         </TouchableOpacity>
 
         <Text>Already have an account? <TouchableOpacity onPress={Sendtologin}>

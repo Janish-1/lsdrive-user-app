@@ -87,27 +87,27 @@ const LoginPage = () => {
   return (
       <KeyboardAvoidingView style={[styles.container, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
         <View style={[styles.inner, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]}>
-          <Text style={[styles.title, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Welcome Back!</Text>
+          <Text style={[styles.title, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Welcome Back!</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={[styles.label, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Username:</Text>
+            <Text style={[styles.label, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Username:</Text>
             <TextInput style={[styles.input, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]} placeholder="Enter your username" onChangeText={(text) => setUsername(text)} />
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={[styles.label, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Password:</Text>
+            <Text style={[styles.label, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Password:</Text>
             <TextInput style={[styles.input, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]} placeholder="Enter your password" secureTextEntry onChangeText={(text) => setPassword(text)} />
           </View>
 
-          <TouchableOpacity onPress={sendToReset}><Text style={[styles.link, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Forgot your password?</Text></TouchableOpacity>
+          <TouchableOpacity onPress={sendToReset}><Text style={[styles.link, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Forgot your password?</Text></TouchableOpacity>
 
           <TouchableOpacity style={[styles.buttonContainer, { backgroundColor: colorScheme === 'dark' ? '#4b4b4b' : '#9b59b6' }]} onPress={loginSuccess}>
-            <Text style={[styles.buttonText, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Login</Text>
+            <Text style={[styles.buttonText, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Login</Text>
           </TouchableOpacity>
 
           <View style={styles.signupContainer}>
             <Text>Don't have an account? <TouchableOpacity onPress={sendToRegister}>
-              <Text style={[styles.signupLink, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>Signup!</Text>
+              <Text style={[styles.signupLink, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Signup!</Text>
             </TouchableOpacity></Text>
           </View>
         </View>
