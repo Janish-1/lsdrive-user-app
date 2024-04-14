@@ -13,6 +13,7 @@ const CheckoutPage = () => {
   const [dropDate, setDropDate] = useState(new Date());
   const [passengers, setPassengers] = useState('');
   const [dropLocation, setDropLocation] = useState('No Location Selected');
+  const [pickupLocation, setPickupLocation] = useState('No Location Selected');
   const [showPopup, setShowPopup] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDateType, setSelectedDateType] = useState('pickup');
@@ -51,6 +52,7 @@ const CheckoutPage = () => {
         // Update passengers and dropLocation states
         setPassengers(parsedData.passengers ? String(parsedData.passengers) : '');
         setDropLocation(parsedData.destination_address || 'No Location Selected');
+        setPickupLocation(parsedData.current_address || 'No Location Selected');
       }
     } catch (error) {
       console.error('Error loading ride data:', error);
@@ -240,8 +242,9 @@ const CheckoutPage = () => {
             <View style={styles.popup}>
               <Text style={styles.popupTitle}>Ride Details</Text>
               <Text style={styles.popupText}>Pickup Date & Time: {pickupDate ? pickupDate.toLocaleString() : 'No Data'}</Text>
+              <Text style={styles.popupText}>Pickup Location: {pickupLocation ? pickupLocation : 'No Data'}</Text>
               <Text style={styles.popupText}>Drop Location: {dropLocation ? dropLocation : 'No Data'}</Text>
-              <Text style={styles.popupText}>Passengers: {rideData.passengers ? rideData.passengers : 'No Data'}</Text>
+              <Text style={styles.popupText}>Passengers Count: {rideData.passengers ? rideData.passengers : 'No Data'}</Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.closeButton} onPress={handleCheckout}>
                   <Text style={styles.checkoutText}>Checkout</Text>

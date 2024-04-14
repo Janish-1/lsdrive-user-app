@@ -146,16 +146,70 @@ const Dashboard = () => {
     }
   };
 
-  const onMapLongPress = (event) => {
+  const onMapLongPress = async (event) => {
     const { coordinate } = event.nativeEvent;
     if (isSelectingPickup) {
-      setPickupLocation(coordinate);
+      const address = await fetchAddress(coordinate);
+      setPickupLocation({ ...coordinate, address });
       animateToLocation(coordinate);
       setIsSelectingPickup(false);
+      const newPickupLocation = {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+        address: address,
+      };  
+      // Update rideData with new pickup location
+      setRideData(prevData => ({
+        ...prevData,
+        current_latitude: newPickupLocation.latitude,
+        current_longitude: newPickupLocation.longitude,
+        current_address: newPickupLocation.address,
+      }));
+      // Save updated rideData to AsyncStorage
+      saveRideData({
+        ...rideData,
+        current_latitude: newPickupLocation.latitude,
+        current_longitude: newPickupLocation.longitude,
+        current_address: newPickupLocation.address,
+      });
     } else if (isSelectingDestination) {
-      setDestination(coordinate);
+      const address = await fetchAddress(coordinate);
+      setDestination({ ...coordinate, address });
       animateToLocation(coordinate);
       setIsSelectingDestination(false);
+      const newDestination = {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+        address: address,
+      };  
+      setRideData(prevData => ({
+        ...prevData,
+        destination_latitude: newDestination.latitude,
+        destination_longitude: newDestination.longitude,
+        destination_address: newDestination.address,
+      }));
+      // Save updated rideData to AsyncStorage
+      saveRideData({
+        ...rideData,
+        destination_latitude: newDestination.latitude,
+        destination_longitude: newDestination.longitude,
+        destination_address: newDestination.address,
+      });  
+    }
+  };
+  
+  const fetchAddress = async (coordinate) => {
+    try {
+      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinate.latitude},${coordinate.longitude}&key=${GOOGLE_API_KEY}`);
+      const data = await response.json();
+      if (data.results.length > 0) {
+        return data.results[0].formatted_address;
+      } else {
+        return 'Address not found';
+      }
+    } catch (error) {
+      console.error('Error fetching address:', error);
+      return 'Error fetching address';
     }
   };
 
@@ -184,7 +238,11 @@ const Dashboard = () => {
       <View style={styles.inputContainer}>
         <GooglePlacesAutocomplete
           placeholder='Enter pickup location'
-          textInputProps={{placeholderTextColor:'black',color:'black'}}
+          textInputProps={{
+            placeholderTextColor: 'black',
+            color: 'black',
+            value: pickupLocation ? pickupLocation.address : '', // Update the value with selected pickup location address
+          }}
           onPress={(data, details = null) => onPickupSelected(details)}
           fetchDetails={true}
           query={{
@@ -193,9 +251,14 @@ const Dashboard = () => {
           }}
           styles={styles.inputContainer}
         />
+
         <GooglePlacesAutocomplete
           placeholder='Enter destination location'
-          textInputProps={{placeholderTextColor:'black',color:'black'}}
+          textInputProps={{
+            placeholderTextColor: 'black',
+            color: 'black',
+            value: destination ? destination.address : '', // Update the value with selected destination address
+          }}
           onPress={(data, details = null) => onDestinationSelected(details)}
           fetchDetails={true}
           query={{
@@ -288,7 +351,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
-    buttonText: {
+  buttonText: {
     color: 'black',
     fontSize: 16,
   },
