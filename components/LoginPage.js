@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Touchable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { API_URL } from '@env';
-import { useColorScheme } from 'react-native';
 
 const LoginPage = () => {
   const navigation = useNavigation();
-  const colorScheme = useColorScheme();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -85,29 +82,29 @@ const LoginPage = () => {
   };
 
   return (
-      <KeyboardAvoidingView style={[styles.container, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
-        <View style={[styles.inner, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]}>
-          <Text style={[styles.title, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Welcome Back!</Text>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : null} enabled>
+        <View style={styles.inner}>
+          <Text style={styles.title}>Welcome Back!</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={[styles.label, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Username:</Text>
-            <TextInput style={[styles.input, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]} placeholder="Enter your username" onChangeText={(text) => setUsername(text)} />
+            <Text style={styles.label}>Username:</Text>
+            <TextInput style={styles.input} placeholder="Enter your username" placeholderTextColor="black" onChangeText={(text) => setUsername(text)} />
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={[styles.label, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Password:</Text>
-            <TextInput style={[styles.input, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]} placeholder="Enter your password" secureTextEntry onChangeText={(text) => setPassword(text)} />
+            <Text style={styles.label}>Password:</Text>
+            <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry placeholderTextColor="black" onChangeText={(text) => setPassword(text)} />
           </View>
 
-          <TouchableOpacity onPress={sendToReset}><Text style={[styles.link, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Forgot your password?</Text></TouchableOpacity>
+          <TouchableOpacity onPress={sendToReset}><Text style={styles.link}>Forgot your password?</Text></TouchableOpacity>
 
-          <TouchableOpacity style={[styles.buttonContainer, { backgroundColor: colorScheme === 'dark' ? '#4b4b4b' : '#9b59b6' }]} onPress={loginSuccess}>
-            <Text style={[styles.buttonText, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Login</Text>
+          <TouchableOpacity style={styles.buttonContainer} onPress={loginSuccess}>
+            <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
 
           <View style={styles.signupContainer}>
             <Text>Don't have an account? <TouchableOpacity onPress={sendToRegister}>
-              <Text style={[styles.signupLink, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Signup!</Text>
+              <Text style={styles.signupLink}>Signup!</Text>
             </TouchableOpacity></Text>
           </View>
         </View>
@@ -173,6 +170,13 @@ const styles = StyleSheet.create({
   signupLink: {
     color: 'blue',
     textDecorationLine: 'underline',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 8,
+    color: 'black',
   },
 });
 

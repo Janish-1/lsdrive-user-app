@@ -23,6 +23,8 @@ const Dashboard = () => {
   });
   const colorScheme = useColorScheme();
   const navigation = useNavigation();
+  const [isSelectingPickup, setIsSelectingPickup] = useState(false); // State to track if selecting pickup or destination
+  const [isSelectingDestination, setIsSelectingDestination] = useState(false);
 
   useEffect(() => {
     // Load rideData from AsyncStorage when the component mounts
@@ -65,8 +67,6 @@ const Dashboard = () => {
           longitudeDelta: 0.0421,
         });
       },
-      error => alert(error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
   };
 
@@ -77,6 +77,14 @@ const Dashboard = () => {
       latitudeDelta: 0.005,
       longitudeDelta: 0.005,
     }, 1000);
+  };
+
+  const current = () => {
+    if (currentLocation) {
+      animateToLocation(currentLocation);
+    } else {
+      getCurrentLocation();
+    }
   };
 
   const onPickupSelected = async (details) => {
@@ -138,12 +146,36 @@ const Dashboard = () => {
     }
   };
 
+  const onMapLongPress = (event) => {
+    const { coordinate } = event.nativeEvent;
+    if (isSelectingPickup) {
+      setPickupLocation(coordinate);
+      animateToLocation(coordinate);
+      setIsSelectingPickup(false);
+    } else if (isSelectingDestination) {
+      setDestination(coordinate);
+      animateToLocation(coordinate);
+      setIsSelectingDestination(false);
+    }
+  };
+
+  const selectPickup = () => {
+    setIsSelectingPickup(true);
+    setIsSelectingDestination(false);
+  };
+
+  const selectDestination = () => {
+    setIsSelectingDestination(true);
+    setIsSelectingPickup(false);
+  };
+
   return (
     <View style={styles.container}>
       <MapView
         ref={mapRef}
         style={StyleSheet.absoluteFillObject}
         initialRegion={currentLocation}
+        onLongPress={onMapLongPress}
       >
         {pickupLocation && <Marker coordinate={pickupLocation} title="Pickup Location" />}
         {destination && <Marker coordinate={destination} title="Destination Location" />}
@@ -152,33 +184,29 @@ const Dashboard = () => {
       <View style={styles.inputContainer}>
         <GooglePlacesAutocomplete
           placeholder='Enter pickup location'
+          textInputProps={{placeholderTextColor:'black',color:'black'}}
           onPress={(data, details = null) => onPickupSelected(details)}
-          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'black' : 'black'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,
             language: 'en',
           }}
-          styles={{
-            description : {color : 'black'}
-          }}
+          styles={styles.inputContainer}
         />
         <GooglePlacesAutocomplete
           placeholder='Enter destination location'
+          textInputProps={{placeholderTextColor:'black',color:'black'}}
           onPress={(data, details = null) => onDestinationSelected(details)}
-          textInputProps={{placeholderTextColor: colorScheme === 'dark' ? 'black' : 'black'}}
           fetchDetails={true}
           query={{
             key: GOOGLE_API_KEY,
             language: 'en',
           }}
-          styles={{
-            description : {color : 'black'}
-          }}
+          styles={styles.inputContainer}
         />
       </View>
 
-      <TouchableOpacity style={styles.locateButton} onPress={getCurrentLocation}>
+      <TouchableOpacity style={styles.locateButton} onPress={current}>
         <Location
           width="24"
           height="24"
@@ -187,6 +215,14 @@ const Dashboard = () => {
 
       <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('CheckoutPage')}>
         <Text style={styles.bookButtonText}>Book</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.pickupButton} onPress={selectPickup}>
+        <Text style={styles.buttonText}>Select Pickup</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.destinationButton} onPress={selectDestination}>
+        <Text style={styles.buttonText}>Select Destination</Text>
       </TouchableOpacity>
     </View>
   );
@@ -202,13 +238,11 @@ const styles = StyleSheet.create({
     top: Platform.OS === 'ios' ? 40 : 20,
     width: '100%',
     zIndex: 5,
-    color: "black",
   },
   textInputContainer: {
     borderRadius: 5,
     marginHorizontal: 10,
     marginTop: 5,
-    color: "black",
   },
   locationInput: {
     height: 44,
@@ -236,6 +270,26 @@ const styles = StyleSheet.create({
   bookButtonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 16,
+  },
+  pickupButton: {
+    position: 'absolute',
+    bottom: 100,
+    left: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10,
+  },
+  destinationButton: {
+    position: 'absolute',
+    bottom: 100,
+    right: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10,
+  },
+    buttonText: {
+    color: 'black',
     fontSize: 16,
   },
 });
