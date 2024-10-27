@@ -6,6 +6,7 @@ buildscript {
         targetSdkVersion = 34
         ndkVersion = "26.2.11394342"
         kotlinVersion = "1.8.0"
+        hermesEnabled=true
     }
     repositories {
         google()
